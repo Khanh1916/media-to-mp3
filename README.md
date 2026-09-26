@@ -1,6 +1,12 @@
 # 🎵 Media to MP3 Downloader (YouTube & Facebook)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgrey.svg)](https://github.com/Khanh1916/media-to-mp3)
+
 Ứng dụng tải và chuyển đổi video từ **YouTube** và **Facebook** sang file nhạc **MP3 chất lượng cao (lên đến 320 kbps)**, hỗ trợ chạy trên cả **Windows** và **Linux**.
+
+Tác giả: **KhanhNN (a.k.a Cao Thanh Lam)**
 
 ---
 
@@ -29,11 +35,26 @@
 ### 1. Yêu cầu hệ thống
 - Đã cài đặt **Python 3.8+** trên máy tính.
 
-### 2. Cài đặt thư viện
-Mở Terminal / PowerShell tại thư mục dự án và chạy:
+### 2. Cài đặt môi trường Python (khuyến nghị cho Linux/macOS)
+Với Ubuntu/Debian, Python hệ thống thường báo `externally-managed-environment` khi chạy `pip install` trực tiếp. Cách an toàn nhất là dùng virtual environment `.venv`:
+
 ```bash
-pip install -r requirements.txt
+cd ~/media-to-mp3
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
+
+Nếu muốn rút ngắn, có sẵn 2 script trong repo:
+
+```bash
+cd ~/media-to-mp3
+./setup_venv.sh
+./run.sh
+```
+
+`setup_venv.sh` sẽ tạo `.venv` nếu chưa có và cài các package cần thiết. `run.sh` sẽ chạy app bằng Python trong `.venv` mà không cần phải activate từng lần.
 
 > **Lưu ý trên Linux**:
 > Nếu dùng Ubuntu/Debian và gặp thông báo thiếu Tkinter hoặc xclip, chỉ cần chạy:
@@ -42,14 +63,26 @@ pip install -r requirements.txt
 > sudo apt install python3-tk xclip ffmpeg -y
 > ```
 
+> **Chạy trực tiếp không cần activate**:
+> ```bash
+> cd ~/media-to-mp3
+> .venv/bin/python main.py
+> ```
+
 ---
 
 ## 🎯 Cách Khởi Chạy
 
 ### Cách 1: Chạy giao diện đồ họa (GUI)
+Với venv đã được kích hoạt:
 ```bash
 python main.py
 ```
+Hoặc chạy trực tiếp bằng file script đã chuẩn bị:
+```bash
+./run.sh
+```
+
 Giao diện Dark Mode hiện đại sẽ xuất hiện. Bạn chỉ cần:
 1. Copy link video YouTube hoặc Facebook trên trình duyệt.
 2. Công cụ sẽ tự động bắt link và hỏi bạn có muốn tải không.
@@ -59,13 +92,13 @@ Giao diện Dark Mode hiện đại sẽ xuất hiện. Bạn chỉ cần:
 Dành cho người thích dùng Terminal hoặc chạy trên máy chủ không có giao diện:
 ```bash
 # Tải MP3 320kbps mặc định vào thư mục Music:
-python main.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
 # Chỉ định chất lượng (128, 192, hoặc 320):
-python main.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -b 192
+./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -b 192
 
 # Chỉ định thư mục lưu trữ:
-python main.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -o "D:/MyMusic"
+./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -o "D:/MyMusic"
 ```
 
 ---
