@@ -4,6 +4,8 @@
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgrey.svg)](https://github.com/Khanh1916/media-to-mp3)
 
+[English](README_EN.md) | [Tiếng Việt](README.md)
+
 Ứng dụng tải và chuyển đổi video từ **YouTube** và **Facebook** sang file nhạc **MP3 chất lượng cao (lên đến 320 kbps)**, hỗ trợ chạy trên cả **Windows** và **Linux**.
 
 Tác giả: **KhanhNN (a.k.a Cao Thanh Lam)**
@@ -26,7 +28,7 @@ Tác giả: **KhanhNN (a.k.a Cao Thanh Lam)**
   - Không cần cài đặt FFmpeg thủ công: Đã tích hợp sẵn binary FFmpeg tĩnh thông qua thư viện `imageio-ffmpeg`.
 - 💻 **Hỗ trợ 2 chế độ**:
   - Giao diện đồ họa trực quan (GUI) hiện đại với Dark Mode (`app_ui.py`).
-  - Dòng lệnh (CLI) siêu nhanh cho môi trường Terminal/Server (`python main.py <URL>`).
+  - Dòng lệnh (CLI) siêu nhanh cho môi trường Terminal/Server (`python main.py <URL>` hoặc `./run.sh <URL>`).
 
 ---
 
@@ -93,6 +95,8 @@ Dành cho người thích dùng Terminal hoặc chạy trên máy chủ không c
 ```bash
 # Tải MP3 320kbps mặc định vào thư mục Music:
 ./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+# Hoặc trên Windows:
+python main.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
 # Chỉ định chất lượng (128, 192, hoặc 320):
 ./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -b 192
@@ -125,6 +129,10 @@ media-to-mp3/
 ├── clipboard_monitor.py # Luồng chạy ngầm tự động bắt link YouTube / Facebook
 ├── main.py              # Điểm khởi chạy chính (hỗ trợ cả GUI và CLI)
 ├── build_exe.py         # Script đóng gói ứng dụng với PyInstaller
+├── setup_venv.sh        # Script khởi tạo môi trường ảo Python và cài đặt thư viện
+├── run.sh               # Script chạy nhanh ứng dụng qua môi trường ảo .venv
 ├── requirements.txt     # Danh sách thư viện phụ thuộc
-└── README.md            # Tài liệu hướng dẫn sử dụng
+├── LICENSE              # Giấy phép MIT
+├── README.md            # Tài liệu hướng dẫn sử dụng (Tiếng Việt)
+└── README_EN.md         # Tài liệu hướng dẫn sử dụng (Tiếng Anh)
 ```
