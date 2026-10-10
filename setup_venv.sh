@@ -11,6 +11,7 @@ else
 fi
 
 ./.venv/bin/python -m pip install --upgrade pip
-./.venv/bin/python -m pip install -r requirements.txt
+# --upgrade: luôn kéo yt-dlp mới nhất, bản cũ hay bị YouTube bóp tốc độ / lỗi 403
+./.venv/bin/python -m pip install --upgrade -r requirements.txt
 
 echo "[setup] Done. Run app with: ./run.sh"

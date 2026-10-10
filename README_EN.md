@@ -107,6 +107,23 @@ python main.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
 ---
 
+## 🛠️ Troubleshooting Slow Downloads / 403 Errors (especially on Linux)
+
+YouTube changes frequently, so an outdated yt-dlp or a missing JavaScript runtime leads to very slow downloads, long hangs, or `HTTP Error 403`.
+
+1. **Update yt-dlp** (re-run whenever downloads become slow or fail):
+   ```bash
+   ./setup_venv.sh
+   ```
+2. **Install a JavaScript runtime** (yt-dlp uses it to solve YouTube's signature challenges). [Deno](https://deno.com) is recommended:
+   ```bash
+   curl -fsSL https://deno.land/install.sh | sh
+   ```
+   The app also uses `node` (>= 20), `bun` or `quickjs` if available.
+3. **Check the warnings**: run the app from a terminal (`./run.sh`); `[WARNING]` lines show the cause (missing JS runtime, network retries, ...).
+
+---
+
 ## 📦 Build Executable Binary (.exe / Linux binary)
 
 You can package the application into a standalone executable that runs without Python installed:

@@ -9,6 +9,7 @@ if sys.platform.startswith("win"):
         sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 import argparse
+import logging
 from downloader import MediaDownloader, get_ffmpeg_path
 
 
@@ -56,6 +57,9 @@ def run_cli_download(url: str, output_dir: str = None, bitrate: str = "320"):
 
 
 def main():
+    # Hiện cảnh báo của yt-dlp ra terminal (thiếu JS runtime, retry do mạng...)
+    logging.basicConfig(level=logging.WARNING, format="\n[%(levelname)s] %(message)s")
+
     parser = argparse.ArgumentParser(description="Media to MP3 Converter (YouTube & Facebook)")
     parser.add_argument("url", nargs="?", help="Đường dẫn video YouTube hoặc Facebook (nếu muốn tải trực tiếp bằng CLI)")
     parser.add_argument("-o", "--output", help="Thư mục lưu file MP3 đầu ra")
