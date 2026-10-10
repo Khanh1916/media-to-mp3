@@ -18,6 +18,27 @@ except ImportError:
 
 logger = logging.getLogger("MediaDownloader")
 
+# yt-dlp chỉ tự bật deno; bật thêm node/bun/quickjs để dùng runtime nào có sẵn trên máy.
+# Thiếu JS runtime thì YouTube có thể thiếu định dạng, bị bóp tốc độ hoặc lỗi 403.
+JS_RUNTIMES = {'deno': {}, 'node': {}, 'bun': {}, 'quickjs': {}}
+
+
+class _YtdlLogger:
+    """Đưa cảnh báo của yt-dlp (thiếu JS runtime, retry, timeout...) ra logging thay vì nuốt mất."""
+    def debug(self, msg):
+        pass
+
+    def info(self, msg):
+        pass
+
+    def warning(self, msg):
+        logger.warning(msg)
+
+    def error(self, msg):
+        # Lỗi đã được trả về qua exception -> error_callback, tránh in trùng
+        logger.debug(msg)
+
+
 def get_ffmpeg_path() -> Optional[str]:
     """
     Tìm đường dẫn FFmpeg:
@@ -96,8 +117,8 @@ class MediaDownloader:
             raise RuntimeError("yt-dlp chưa được cài đặt.")
 
         ydl_opts = {
-            'quiet': True,
-            'no_warnings': True,
+            'logger': _YtdlLogger(),
+            'js_runtimes': JS_RUNTIMES,
             'extract_flat': False,
             'skip_download': True,
         }
@@ -198,8 +219,10 @@ class MediaDownloader:
             'progress_hooks': [ytdl_hook],
             'writethumbnail': False,
             'noplaylist': True,
-            'quiet': True,
-            'no_warnings': True,
+            'logger': _YtdlLogger(),
+            'js_runtimes': JS_RUNTIMES,
+            # App tự vẽ tiến trình, không để yt-dlp in thêm dòng [download] lẫn vào
+            'noprogress': True,
             # User agent chuẩn để tránh bị chặn
             'http_headers': {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',

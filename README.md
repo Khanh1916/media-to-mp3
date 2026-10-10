@@ -107,6 +107,23 @@ python main.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
 ---
 
+## 🛠️ Khắc Phục Tải Chậm / Lỗi 403 (đặc biệt trên Linux)
+
+YouTube thay đổi liên tục, nên yt-dlp cũ hoặc thiếu JavaScript runtime sẽ khiến tải rất chậm, treo lâu hoặc lỗi `HTTP Error 403`.
+
+1. **Cập nhật yt-dlp** (chạy lại mỗi khi tải bắt đầu chậm/lỗi):
+   ```bash
+   ./setup_venv.sh
+   ```
+2. **Cài JavaScript runtime** (yt-dlp dùng để giải mã chữ ký YouTube). Khuyến nghị [Deno](https://deno.com):
+   ```bash
+   curl -fsSL https://deno.land/install.sh | sh
+   ```
+   App cũng tự dùng `node` (>= 20), `bun` hoặc `quickjs` nếu có sẵn.
+3. **Xem cảnh báo**: chạy app từ Terminal (`./run.sh`), các dòng `[WARNING]` sẽ cho biết nguyên nhân (thiếu JS runtime, mạng phải thử lại, ...).
+
+---
+
 ## 📦 Đóng Gói Thành File Thực Thi (.exe hoặc binary)
 
 Bạn có thể đóng gói ứng dụng để chia sẻ cho người khác dùng mà không cần cài đặt Python:
