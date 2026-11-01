@@ -1,12 +1,12 @@
 # 🎵 Media to MP3 Downloader (YouTube & Facebook)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgrey.svg)](https://github.com/Khanh1916/media-to-mp3)
 
 [English](README_EN.md) | [Tiếng Việt](README.md)
 
-Ứng dụng tải và chuyển đổi video từ **YouTube** và **Facebook** sang file nhạc **MP3 chất lượng cao (lên đến 320 kbps)**, hỗ trợ chạy trên cả **Windows** và **Linux**.
+Ứng dụng tải video từ **YouTube** và **Facebook** thành file nhạc **MP3 (lên đến 320 kbps), M4A, WAV hoặc FLAC**, kèm công cụ **cắt, ghép nhạc** ngay trong app. Chạy được trên cả **Windows** và **Linux**, giao diện **Tiếng Việt / English**.
 
 Tác giả: **KhanhNN (a.k.a Cao Thanh Lam)**
 
@@ -14,28 +14,35 @@ Tác giả: **KhanhNN (a.k.a Cao Thanh Lam)**
 
 ## ✨ Tính Năng Nổi Bật
 
-- 📋 **Tự động bắt link thông minh**: Khi bạn sao chép (Ctrl+C) bất kỳ đường link video YouTube hoặc Facebook nào, ứng dụng sẽ tự động phát hiện, điền link và hiển thị popup hỏi bạn có muốn tải MP3 không.
-- ⚡ **Chất lượng âm thanh tùy chọn**: Hỗ trợ 3 chuẩn bitrate phổ biến:
-  - `320 kbps`: Chất lượng âm thanh cao cấp nhất (HQ Studio).
-  - `192 kbps`: Chuẩn âm thanh phổ thông, cân bằng dung lượng và chất lượng.
-  - `128 kbps`: Dung lượng siêu nhẹ.
-- 🖼️ **Tự động gắn Metadata & Tag**: Ghi thông tin bài hát (tên ca sĩ, tiêu đề) vào thẻ ID3 của file MP3.
-- 🎧 **Thao tác nhanh**: Sau khi tải xong, có sẵn 2 nút:
-  - *Mở thư mục chứa file* (trong File Explorer / File Manager).
-  - *Nghe thử file MP3* (mở bằng trình phát nhạc mặc định của máy).
-- 🐧 **Đa nền tảng (Cross-platform)**:
-  - Hoạt động mượt mà trên **Windows 10/11** và các bản phân phối **Linux** (Ubuntu, Debian, Fedora, Arch...).
-  - Không cần cài đặt FFmpeg thủ công: Đã tích hợp sẵn binary FFmpeg tĩnh thông qua thư viện `imageio-ffmpeg`.
-- 💻 **Hỗ trợ 2 chế độ**:
-  - Giao diện đồ họa trực quan (GUI) hiện đại với Dark Mode (`app_ui.py`).
-  - Dòng lệnh (CLI) siêu nhanh cho môi trường Terminal/Server (`python main.py <URL>` hoặc `./run.sh <URL>`).
+- 📋 **Tự động bắt link thông minh**: Khi bạn sao chép (Ctrl+C) link video YouTube hoặc Facebook, ứng dụng tự phát hiện và hỏi có thêm vào hàng đợi tải không.
+- 📥 **Hàng đợi tải**: Dán một hoặc nhiều link cùng lúc, app tải lần lượt từng bài. Mỗi bài có tiến trình riêng, hủy / thử lại / bỏ khỏi danh sách được.
+- 🔊 **Nhiều định dạng, phát được trên loa đài**: Tất cả xuất ra chuẩn **44.1 kHz / 16-bit** (chuẩn CD):
+  | Định dạng | Ghi chú |
+  |---|---|
+  | **MP3** (320 / 192 / 128 kbps) | Phát được trên mọi loa, đài, đầu xe hơi và điện thoại. Tag ID3v2.3 để đầu đọc đời cũ cũng hiện tên bài. |
+  | **M4A (AAC)** | Giữ nguyên AAC gốc, không nén lại. Đầu xe, điện thoại, loa Bluetooth đời mới phát tốt. |
+  | **WAV** | Gần như đài nào cũng đọc được, nhưng file nặng (~10 MB/phút), không có ảnh bìa. |
+  | **FLAC** | Không mất dữ liệu. Đầu xe, loa đời mới thường hỗ trợ. |
+  
+  Opus / OGG không được hỗ trợ vì nhiều thiết bị phần cứng không đọc được.
+- 🖼️ **Ảnh bìa & tag tự động**: Nhúng ảnh bìa JPEG vuông 600×600 và tự tách **Ca sĩ – Tên bài** từ tiêu đề video (bỏ các phần như `(Official Video)`, `| OFFICIAL MV`). Bật / tắt được trong phần cài đặt.
+- ✂️ **Cắt & ghép nhạc**:
+  - Thêm nhiều file nhạc (hoặc bấm *Cắt ghép* ngay ở bài vừa tải xong), sắp xếp thứ tự để ghép.
+  - Kéo chọn đoạn cần giữ trên **dạng sóng**, hoặc nhập thời gian chính xác (vd. `1:23.5`).
+  - **Nghe thử** đoạn đã chọn ngay trong app.
+  - Hiệu ứng: **fade in / fade out**, **chuyển mượt (crossfade)** giữa các đoạn, chỉnh **âm lượng**, **cân bằng độ to** (loudnorm).
+  - Sửa tên bài / ca sĩ, giữ ảnh bìa, xuất ra MP3 / M4A / WAV / FLAC.
+- 💾 **Ghi nhớ cài đặt**: Thư mục lưu, định dạng, chất lượng, ngôn ngữ, kích thước cửa sổ... được giữ lại cho lần mở sau.
+- 🌐 **Song ngữ Việt / Anh**: Đổi ngôn ngữ ngay trên giao diện, không cần khởi động lại.
+- 🐧 **Đa nền tảng**: Windows 10/11 và Linux (Ubuntu, Debian, Fedora, Arch...). Không cần cài FFmpeg thủ công vì đã có sẵn bản tích hợp qua `imageio-ffmpeg`.
+- 💻 **Hai chế độ**: Giao diện đồ họa (GUI) Dark Mode, và dòng lệnh (CLI) cho Terminal / máy chủ.
 
 ---
 
 ## 🚀 Hướng Dẫn Cài Đặt & Sử Dụng
 
 ### 1. Yêu cầu hệ thống
-- Đã cài đặt **Python 3.8+** trên máy tính.
+- Đã cài đặt **Python 3.10+** trên máy tính.
 
 ### 2. Cài đặt môi trường Python (khuyến nghị cho Linux/macOS)
 Với Ubuntu/Debian, Python hệ thống thường báo `externally-managed-environment` khi chạy `pip install` trực tiếp. Cách an toàn nhất là dùng virtual environment `.venv`:
@@ -64,6 +71,7 @@ cd ~/media-to-mp3
 > sudo apt update
 > sudo apt install python3-tk xclip ffmpeg -y
 > ```
+> Nút *Nghe đoạn chọn* dùng `paplay` / `pw-play` / `aplay` (Ubuntu desktop có sẵn).
 
 > **Chạy trực tiếp không cần activate**:
 > ```bash
@@ -85,10 +93,17 @@ Hoặc chạy trực tiếp bằng file script đã chuẩn bị:
 ./run.sh
 ```
 
-Giao diện Dark Mode hiện đại sẽ xuất hiện. Bạn chỉ cần:
-1. Copy link video YouTube hoặc Facebook trên trình duyệt.
-2. Công cụ sẽ tự động bắt link và hỏi bạn có muốn tải không.
-3. Hoặc nhấn nút **📋 Dán** và bấm **⬇️ BẮT ĐẦU TẢI MP3**.
+**Tab ⬇ Tải nhạc**
+1. Copy link video YouTube / Facebook trên trình duyệt: app tự bắt link và hỏi có thêm vào hàng đợi không.
+2. Hoặc dán một hay nhiều link vào ô nhập rồi bấm **➕ Thêm vào hàng đợi**.
+3. Chọn định dạng, chất lượng, thư mục lưu. Bài tải xong có các nút *Thư mục*, *Nghe*, *Cắt ghép*.
+
+**Tab ✂ Cắt & ghép nhạc**
+1. Bấm **➕ Thêm file nhạc...** (hoặc nút *Cắt ghép* ở hàng đợi tải).
+2. Chọn từng đoạn trong danh sách, kéo trên dạng sóng để chọn khoảng cần giữ. Dùng ▲ ▼ để đổi thứ tự ghép.
+3. Thêm hiệu ứng nếu muốn, sửa tên bài / ca sĩ, rồi bấm **💾 Xuất file...**.
+
+Đổi **Tiếng Việt / English** ở góc trên bên phải.
 
 ### Cách 2: Tải nhanh qua dòng lệnh (CLI)
 Dành cho người thích dùng Terminal hoặc chạy trên máy chủ không có giao diện:
@@ -98,12 +113,26 @@ Dành cho người thích dùng Terminal hoặc chạy trên máy chủ không c
 # Hoặc trên Windows:
 python main.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
-# Chỉ định chất lượng (128, 192, hoặc 320):
+# Tải nhiều link liên tiếp:
+./run.sh "https://youtu.be/LINK1" "https://youtu.be/LINK2"
+
+# Chọn định dạng (mp3, m4a, wav, flac) và chất lượng MP3 (128, 192, 320):
+./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -f flac
 ./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -b 192
 
 # Chỉ định thư mục lưu trữ:
 ./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -o "D:/MyMusic"
+
+# Không nhúng ảnh bìa / không tự tách Ca sĩ – Tên bài / hiển thị tiếng Anh:
+./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" --no-thumbnail --no-tags --lang en
 ```
+
+### Nơi lưu cài đặt
+- **Windows**: `%APPDATA%\MediaToMP3\settings.json`
+- **Linux**: `~/.config/media-to-mp3/settings.json`
+- **macOS**: `~/Library/Application Support/MediaToMP3/settings.json`
+
+Xóa file này để trở về cài đặt mặc định.
 
 ---
 
@@ -124,6 +153,16 @@ YouTube thay đổi liên tục, nên yt-dlp cũ hoặc thiếu JavaScript runti
 
 ---
 
+## 🧪 Chạy Kiểm Thử
+
+Bộ test dùng `unittest` có sẵn của Python (cần FFmpeg cho phần test cắt / ghép, không cần mạng):
+
+```bash
+python -m unittest discover -s tests -t .
+```
+
+---
+
 ## 📦 Đóng Gói Thành File Thực Thi (.exe hoặc binary)
 
 Bạn có thể đóng gói ứng dụng để chia sẻ cho người khác dùng mà không cần cài đặt Python:
@@ -141,10 +180,18 @@ Sau khi build xong:
 
 ```
 media-to-mp3/
-├── app_ui.py            # Giao diện đồ họa người dùng (CustomTkinter)
-├── downloader.py        # Xử lý lõi tải video và chuyển đổi MP3 (yt-dlp + FFmpeg)
-├── clipboard_monitor.py # Luồng chạy ngầm tự động bắt link YouTube / Facebook
 ├── main.py              # Điểm khởi chạy chính (hỗ trợ cả GUI và CLI)
+├── app_ui.py            # Cửa sổ chính: tiêu đề, chọn ngôn ngữ, 2 tab (CustomTkinter)
+├── ui_download.py       # Tab tải nhạc: nhập link, định dạng, hàng đợi
+├── ui_editor.py         # Tab cắt & ghép: danh sách đoạn, dạng sóng, hiệu ứng, xuất file
+├── downloader.py        # Lõi tải video và chuyển đổi âm thanh (yt-dlp + FFmpeg), tách Ca sĩ – Tên bài
+├── download_queue.py    # Hàng đợi tải nhiều bài trong luồng nền
+├── audio_tools.py       # Cắt / ghép / hiệu ứng / dạng sóng / nghe thử bằng FFmpeg
+├── clipboard_monitor.py # Luồng chạy ngầm tự động bắt link YouTube / Facebook
+├── config.py            # Lưu / đọc cài đặt người dùng (JSON)
+├── i18n.py              # Chuỗi giao diện Tiếng Việt / English
+├── platform_utils.py    # Mở thư mục / phát file theo hệ điều hành
+├── tests/               # Bộ kiểm thử (unittest)
 ├── build_exe.py         # Script đóng gói ứng dụng với PyInstaller
 ├── setup_venv.sh        # Script khởi tạo môi trường ảo Python và cài đặt thư viện
 ├── run.sh               # Script chạy nhanh ứng dụng qua môi trường ảo .venv
