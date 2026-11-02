@@ -242,19 +242,18 @@ def run_export(
         raise AudioToolError("output file must be different from input files")
 
     with tempfile.TemporaryFile() as err_file:
-        proc = subprocess.Popen(
+        with subprocess.Popen(
             cmd, stdout=subprocess.PIPE, stderr=err_file, stdin=subprocess.DEVNULL,
             text=True, encoding="utf-8", errors="replace", **_POPEN_FLAGS,
-        )
-        for line in proc.stdout:
-            if cancel_event is not None and cancel_event.is_set():
-                proc.kill()
-                break
-            m = re.match(r"out_time=(\d+):(\d+):(\d+(?:\.\d+)?)", line)
-            if m and progress_callback and total_seconds > 0:
-                done = int(m.group(1)) * 3600 + int(m.group(2)) * 60 + float(m.group(3))
-                progress_callback(min(1.0, done / total_seconds))
-        proc.wait()
+        ) as proc:
+            for line in proc.stdout:
+                if cancel_event is not None and cancel_event.is_set():
+                    proc.kill()
+                    break
+                m = re.match(r"out_time=(\d+):(\d+):(\d+(?:\.\d+)?)", line)
+                if m and progress_callback and total_seconds > 0:
+                    done = int(m.group(1)) * 3600 + int(m.group(2)) * 60 + float(m.group(3))
+                    progress_callback(min(1.0, done / total_seconds))
 
         if cancel_event is not None and cancel_event.is_set():
             _silent_remove(out_path)

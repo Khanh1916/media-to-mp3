@@ -119,6 +119,11 @@ def package_release(onedir: bool) -> str:
 
 
 def main():
+    # Console Windows (vd. máy build của GitHub Actions) mặc định cp1252, không in được tiếng Việt
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
+
     parser = argparse.ArgumentParser(description="Đóng gói Media to MP3 bằng PyInstaller")
     parser.add_argument("--ffmpeg", help="FFmpeg sẽ đóng gói kèm (khuyên dùng bản tối giản của build_ffmpeg.sh)")
     parser.add_argument("--onedir", action="store_true", help="Đóng gói thành thư mục thay vì một file")
