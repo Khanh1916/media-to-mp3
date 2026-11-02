@@ -1,0 +1,2 @@
+# Script shell phải giữ xuống dòng LF, kể cả khi clone trên Windows (core.autocrlf)
+*.sh text eol=lf

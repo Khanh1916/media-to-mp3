@@ -1,6 +1,23 @@
 import sys
 import io
 
+# Bản .exe là ứng dụng cửa sổ, không có console: khi chạy từ cmd / PowerShell kèm tham số
+# (vd. --check, --help) thì gắn vào console đang mở để in được kết quả
+if sys.platform.startswith("win") and getattr(sys, "frozen", False) and sys.stdout is None and len(sys.argv) > 1:
+    import ctypes
+    if ctypes.windll.kernel32.AttachConsole(-1):
+        sys.stdout = sys.stderr = open("CONOUT$", "w", encoding="utf-8", errors="replace")
+
+# Bản đóng gói trên Linux: PyInstaller trỏ LD_LIBRARY_PATH vào thư viện đóng gói kèm. Trả lại giá trị gốc
+# để các chương trình hệ thống app gọi (xclip, paplay, xdg-open...) không nạp nhầm thư viện
+if sys.platform.startswith("linux") and getattr(sys, "frozen", False):
+    import os
+    _original = os.environ.pop("LD_LIBRARY_PATH_ORIG", None)
+    if _original is not None:
+        os.environ["LD_LIBRARY_PATH"] = _original
+    else:
+        os.environ.pop("LD_LIBRARY_PATH", None)
+
 # Đảm bảo mã hóa UTF-8 trên Windows console
 if sys.platform.startswith("win"):
     if hasattr(sys.stdout, "buffer"):
@@ -14,6 +31,7 @@ import logging
 import config
 from downloader import AUDIO_FORMATS, MediaDownloader, get_ffmpeg_path
 from i18n import LANGUAGES, set_language, t
+from version import __version__
 
 
 def run_cli_download(url: str, output_dir: str = None, fmt: str = "mp3", bitrate: str = "320",
@@ -76,6 +94,8 @@ def main():
     lang_option.help = t("cli_help_lang")
 
     parser = argparse.ArgumentParser(description=t("cli_desc"), parents=[pre])
+    parser.add_argument("--version", action="version", version=f"Media to MP3 {__version__}")
+    parser.add_argument("--check", action="store_true", help=t("cli_help_check"))
     parser.add_argument("urls", nargs="*", metavar="URL", help=t("cli_help_url"))
     parser.add_argument("-o", "--output", help=t("cli_help_output"))
     parser.add_argument("-f", "--format", default="mp3", choices=list(AUDIO_FORMATS), help=t("cli_help_format"))
@@ -85,6 +105,10 @@ def main():
     parser.add_argument("--cli", action="store_true", help=t("cli_help_cli"))
 
     args = parser.parse_args()
+
+    if args.check:
+        from selftest import run_selftest
+        sys.exit(0 if run_selftest() else 1)
 
     # Nếu có truyền URL hoặc cờ --cli thì chạy CLI
     if args.urls or args.cli:

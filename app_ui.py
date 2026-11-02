@@ -1,6 +1,7 @@
 import os
 import re
 import shutil
+import sys
 import tempfile
 import tkinter as tk
 
@@ -13,8 +14,10 @@ from clipboard_monitor import ClipboardMonitor
 from download_queue import DownloadQueue
 from downloader import AUDIO_FORMATS, MediaDownloader, default_download_dir
 from i18n import LANGUAGES, get_language, set_language, t
+from platform_utils import resource_path
 from ui_download import DownloadTab
 from ui_editor import EditorState, EditorTab
+from version import __version__
 
 DEFAULT_WIDTH, DEFAULT_HEIGHT = 920, 720
 
@@ -33,6 +36,7 @@ class MediaToMp3App(ctk.CTk):
         ctk.set_default_color_theme("blue")
         self.geometry(self._initial_geometry())
         self.minsize(820, 600)
+        self._set_icon()
 
         # Khởi tạo dịch vụ (giữ nguyên khi giao diện được dựng lại lúc đổi ngôn ngữ)
         self.downloader = MediaDownloader(download_dir=self.settings["download_dir"])
@@ -66,6 +70,16 @@ class MediaToMp3App(ctk.CTk):
         if not re.fullmatch(r"\d{3,5}x\d{3,5}", s["window_geometry"]):
             s["window_geometry"] = ""
 
+    def _set_icon(self):
+        try:
+            if sys.platform.startswith("win"):
+                self.iconbitmap(resource_path(os.path.join("packaging", "icon.ico")))
+            else:
+                self._icon_image = tk.PhotoImage(file=resource_path(os.path.join("packaging", "icon.png")))
+                self.iconphoto(True, self._icon_image)
+        except tk.TclError:
+            pass
+
     def _initial_geometry(self) -> str:
         """Kích thước đã lưu hoặc mặc định, không cao quá màn hình (vd. laptop 1080p để scaling 150%)"""
         scale = ctk.ScalingTracker.get_window_scaling(self)
@@ -77,7 +91,7 @@ class MediaToMp3App(ctk.CTk):
         return f"{min(width, max_width)}x{max(600, min(height, max_height))}"
 
     def _build_ui(self, selected_tab: str = "download"):
-        self.title(t("window_title"))
+        self.title(f"{t('window_title')} v{__version__}")
         self._root_frame = ctk.CTkFrame(self, fg_color="transparent")
         self._root_frame.pack(fill="both", expand=True)
 

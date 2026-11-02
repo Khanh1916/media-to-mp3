@@ -39,6 +39,20 @@ Author: **KhanhNN (a.k.a Cao Thanh Lam)**
 
 ---
 
+## 📥 Download & Run (no Python needed)
+
+Get the latest build from **[Releases](https://github.com/Khanh1916/media-to-mp3/releases/latest)**: a single file (~22–25 MB) with FFmpeg built in.
+
+| OS | File | How to run |
+|---|---|---|
+| Windows 10 / 11 (64-bit) | `MediaToMP3-x.y.z-windows-x64.exe` | Open it. If Windows shows *"Windows protected your PC"* (the app is not code-signed), click **More info → Run anyway**. |
+| Linux 64-bit (Ubuntu 22.04+, Debian 12+, Fedora 36+...) | `MediaToMP3-x.y.z-linux-x64.tar.gz` | Extract it and run `./MediaToMP3`. |
+
+Run `MediaToMP3 --check` for an offline self-check of conversion, cover art and cut & join.
+To run from source instead, follow the steps below.
+
+---
+
 ## 🚀 Installation & Setup
 
 ### 1. Prerequisites
@@ -123,6 +137,9 @@ python main.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 # Specify custom output directory:
 ./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -o "D:/MyMusic"
 
+# Self-check FFmpeg and the features (no network needed):
+./run.sh --check
+
 # No cover art / no Artist – Title detection / English output:
 ./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" --no-thumbnail --no-tags --lang en
 ```
@@ -163,16 +180,29 @@ python -m unittest discover -s tests -t .
 
 ---
 
-## 📦 Build Executable Binary (.exe / Linux binary)
+## 📦 Packaging & Releases
 
-You can bundle the application into a standalone executable to share with others without requiring a Python installation:
-
+### Build locally
 ```bash
-python build_exe.py
+# 1. (Recommended) Build a minimal ~5 MB FFmpeg instead of the full ~80 MB one (on Linux / WSL / Docker):
+bash packaging/build_ffmpeg.sh windows out-ffmpeg      # or: linux
+
+# 2. Package everything into a single executable:
+python build_exe.py --ffmpeg out-ffmpeg/ffmpeg.exe --release
 ```
-Once completed:
-- **Windows**: Executable is located at `dist/MediaToMP3/MediaToMP3.exe`.
-- **Linux**: Binary is located at `dist/MediaToMP3/MediaToMP3`.
+- Output: `dist/MediaToMP3.exe` (Windows) or `dist/MediaToMP3` (Linux). `--release` also writes a versioned file to `dist/release/`.
+- Without `--ffmpeg`, the full FFmpeg from `imageio-ffmpeg` is bundled (~30 MB larger).
+- `build_ffmpeg.sh` needs `build-essential nasm pkg-config curl xz-utils`, plus `gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64 mingw-w64-x86-64-dev` for Windows builds.
+
+### Publishing a release (built by GitHub Actions)
+1. Bump the version in `version.py` and merge into `main`.
+2. Push a matching tag:
+   ```bash
+   git tag v1.0.0 && git push origin v1.0.0
+   ```
+3. The **Build & Release** workflow builds the minimal FFmpeg, packages Windows + Linux, runs `--check` on the packaged files, then creates the Release with the downloads and `SHA256SUMS.txt`.
+
+Every pull request is built and self-checked the same way (without publishing).
 
 ---
 
@@ -191,12 +221,17 @@ media-to-mp3/
 ├── config.py            # Save / load user settings (JSON)
 ├── i18n.py              # Vietnamese / English UI strings
 ├── platform_utils.py    # Open folders / play files per operating system
+├── selftest.py          # Self-check (--check): FFmpeg, conversion, cover art, cut & join
+├── version.py           # Version number
 ├── tests/               # Test suite (unittest)
-├── build_exe.py         # Packaging script utilizing PyInstaller
+├── build_exe.py         # Single-file packaging with PyInstaller
+├── packaging/           # Minimal FFmpeg build script, icon, release notes
+├── .github/workflows/   # GitHub Actions: build & publish Windows / Linux releases
 ├── setup_venv.sh        # Helper script to setup Python virtual environment
 ├── run.sh               # Launcher script to run the app via .venv
 ├── requirements.txt     # Python package dependencies
 ├── LICENSE              # MIT License
+├── THIRD_PARTY_NOTICES.md # Licenses of bundled components (FFmpeg, yt-dlp...)
 ├── README.md            # Documentation (Vietnamese)
 └── README_EN.md         # Documentation (English)
 ```
