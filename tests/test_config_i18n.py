@@ -73,9 +73,22 @@ class I18nTest(unittest.TestCase):
         self.assertTrue(used)
         self.assertEqual(sorted(used - set(i18n.STRINGS["vi"])), [])
 
+    def test_emoji_stripped_only_when_enabled(self):
+        original = i18n.STRIP_EMOJI
+        try:
+            i18n.STRIP_EMOJI = True
+            self.assertEqual(i18n.t("btn_add_queue"), "Thêm vào hàng đợi")
+            self.assertEqual(i18n.t("st_error", error="x"), "x")
+            self.assertEqual(i18n.plain("🔴 YouTube Video"), "YouTube Video")
+            self.assertEqual(i18n.plain("Tải ⬇ nhạc"), "Tải nhạc")
+            i18n.STRIP_EMOJI = False
+            self.assertEqual(i18n.t("btn_add_queue"), "➕ Thêm vào hàng đợi")
+        finally:
+            i18n.STRIP_EMOJI = original
+
     def test_switch_language_and_fallbacks(self):
         i18n.set_language("en")
-        self.assertEqual(i18n.t("st_done"), "✅ Done")
+        self.assertEqual(i18n.t("st_done"), i18n.plain("✅ Done"))  # Linux bỏ emoji
         self.assertEqual(i18n.t("msg_added", n=2), "Added 2 link(s) to the queue.")
         i18n.set_language("xx")  # không hỗ trợ -> giữ nguyên
         self.assertEqual(i18n.get_language(), "en")

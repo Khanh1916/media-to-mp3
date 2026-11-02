@@ -93,7 +93,7 @@ def _ffmpeg() -> str:
 def probe(path: str) -> AudioInfo:
     """Đọc độ dài, tag tên bài / ca sĩ và ảnh bìa bằng `ffmpeg -i` (imageio-ffmpeg không kèm ffprobe)."""
     proc = subprocess.run(
-        [_ffmpeg(), "-hide_banner", "-i", path],
+        [_ffmpeg(), "-hide_banner", "-i", path], stdin=subprocess.DEVNULL,
         capture_output=True, text=True, encoding="utf-8", errors="replace", **_POPEN_FLAGS,
     )
     out = proc.stderr
@@ -121,7 +121,7 @@ def load_peaks(path: str, duration: float, buckets: int = 1600) -> List[float]:
     rate = int(min(8000, max(400, 2_000_000 / max(duration, 1))))
     proc = subprocess.run(
         [_ffmpeg(), "-v", "error", "-i", path, "-vn", "-ac", "1", "-ar", str(rate), "-f", "s16le", "-"],
-        capture_output=True, **_POPEN_FLAGS,
+        stdin=subprocess.DEVNULL, capture_output=True, **_POPEN_FLAGS,
     )
     samples = array.array("h")
     samples.frombytes(proc.stdout[: len(proc.stdout) // 2 * 2])
@@ -175,9 +175,11 @@ def build_export_command(
     for clip in clips:
         cmd += ["-ss", f"{clip.start:.3f}", "-t", f"{clip.length:.3f}", "-i", clip.path]
 
-    # Đưa mọi đoạn về cùng tần số mẫu / số kênh thì concat, acrossfade mới ghép được
+    # Đưa mọi đoạn về cùng tần số mẫu / số kênh thì concat, acrossfade mới ghép được.
+    # Chia lại khung 1024 mẫu: acrossfade ra file rỗng khi đoạn sau có khung lớn (FLAC: 4608 mẫu).
     filters = [
-        f"[{i}:a:0]aresample={SAMPLE_RATE},aformat=sample_fmts=fltp:channel_layouts=stereo[c{i}]"
+        f"[{i}:a:0]aresample={SAMPLE_RATE},aformat=sample_fmts=fltp:channel_layouts=stereo,"
+        f"asetnsamples=n=1024:p=0[c{i}]"
         for i in range(len(clips))
     ]
     xf = effective_crossfade(clips, crossfade)
@@ -240,19 +242,18 @@ def run_export(
         raise AudioToolError("output file must be different from input files")
 
     with tempfile.TemporaryFile() as err_file:
-        proc = subprocess.Popen(
+        with subprocess.Popen(
             cmd, stdout=subprocess.PIPE, stderr=err_file, stdin=subprocess.DEVNULL,
             text=True, encoding="utf-8", errors="replace", **_POPEN_FLAGS,
-        )
-        for line in proc.stdout:
-            if cancel_event is not None and cancel_event.is_set():
-                proc.kill()
-                break
-            m = re.match(r"out_time=(\d+):(\d+):(\d+(?:\.\d+)?)", line)
-            if m and progress_callback and total_seconds > 0:
-                done = int(m.group(1)) * 3600 + int(m.group(2)) * 60 + float(m.group(3))
-                progress_callback(min(1.0, done / total_seconds))
-        proc.wait()
+        ) as proc:
+            for line in proc.stdout:
+                if cancel_event is not None and cancel_event.is_set():
+                    proc.kill()
+                    break
+                m = re.match(r"out_time=(\d+):(\d+):(\d+(?:\.\d+)?)", line)
+                if m and progress_callback and total_seconds > 0:
+                    done = int(m.group(1)) * 3600 + int(m.group(2)) * 60 + float(m.group(3))
+                    progress_callback(min(1.0, done / total_seconds))
 
         if cancel_event is not None and cancel_event.is_set():
             _silent_remove(out_path)
@@ -271,7 +272,8 @@ def render_preview(clip: ClipSpec, out_wav: str):
     proc = subprocess.run(
         [_ffmpeg(), "-v", "error", "-y", "-ss", f"{clip.start:.3f}", "-t", f"{clip.length:.3f}",
          "-i", clip.path, "-vn", "-ac", "2", "-ar", str(SAMPLE_RATE), "-c:a", "pcm_s16le", out_wav],
-        capture_output=True, text=True, encoding="utf-8", errors="replace", **_POPEN_FLAGS,
+        stdin=subprocess.DEVNULL, capture_output=True, text=True, encoding="utf-8", errors="replace",
+        **_POPEN_FLAGS,
     )
     if proc.returncode != 0:
         raise AudioToolError(proc.stderr.strip() or "preview failed")

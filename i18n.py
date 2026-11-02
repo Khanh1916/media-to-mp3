@@ -2,6 +2,11 @@
 Song ngữ Việt / Anh cho giao diện, thông báo lỗi và CLI.
 Dùng: t("key", **giá_trị). Thiếu bản dịch thì lấy tiếng Việt, thiếu luôn thì trả về chính key.
 """
+import re
+import sys
+
+STRIP_EMOJI = sys.platform.startswith("linux")
+_EMOJI = re.compile("[\U00010000-\U0010FFFF⌀-⏿☀-➿⬀-⯿️]+ ?")
 
 LANGUAGES = {"vi": "Tiếng Việt", "en": "English"}
 DEFAULT_LANGUAGE = "vi"
@@ -128,6 +133,7 @@ STRINGS = {
         "cli_help_no_tags": "Không tự tách Ca sĩ – Tên bài từ tiêu đề",
         "cli_help_cli": "Chạy ở chế độ dòng lệnh (CLI)",
         "cli_help_lang": "Ngôn ngữ hiển thị (vi / en)",
+        "cli_help_check": "Tự kiểm tra FFmpeg và các chức năng cắt / ghép / chuyển đổi (không cần mạng)",
         "cli_need_url": "Vui lòng cung cấp link video: python main.py <URL>",
         "cli_no_ffmpeg": "[Lỗi] Không tìm thấy FFmpeg trên máy tính!",
         "cli_downloading": "[Media to MP3] Đang tải từ: {url}",
@@ -253,6 +259,7 @@ STRINGS = {
         "cli_help_no_tags": "Don't detect Artist – Title from the video title",
         "cli_help_cli": "Run in command-line mode",
         "cli_help_lang": "Display language (vi / en)",
+        "cli_help_check": "Self-check FFmpeg and the cut / join / convert features (no network needed)",
         "cli_need_url": "Please provide a video link: python main.py <URL>",
         "cli_no_ffmpeg": "[Error] FFmpeg not found on this computer!",
         "cli_downloading": "[Media to MP3] Downloading: {url}",
@@ -278,6 +285,11 @@ def get_language() -> str:
     return _current
 
 
+def plain(text: str) -> str:
+    """Bỏ emoji trên Linux: Tk ở đó vẽ emoji thành ô vuông (máy có font emoji màu còn có thể lỗi X11)"""
+    return _EMOJI.sub("", text) if STRIP_EMOJI else text
+
+
 def t(key: str, **kwargs) -> str:
     text = STRINGS[_current].get(key) or STRINGS[DEFAULT_LANGUAGE].get(key) or key
-    return text.format(**kwargs) if kwargs else text
+    return plain(text.format(**kwargs) if kwargs else text)

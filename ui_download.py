@@ -9,7 +9,7 @@ from download_queue import (
     PENDING, DOWNLOADING, CONVERTING, DONE, ERROR, CANCELLED, ACTIVE_STATUSES, FINISHED_STATUSES,
 )
 from downloader import AUDIO_FORMATS, MediaDownloader, get_ffmpeg_path
-from i18n import t
+from i18n import plain, t
 from platform_utils import open_path_in_explorer, play_audio_file
 
 URL_IN_TEXT = re.compile(r"https?://\S+")
@@ -179,7 +179,7 @@ class DownloadTab:
             return
         platform_name = MediaDownloader.identify_platform(url)
         text, color = PLATFORM_BADGES.get(platform_name, (f"🌐 {platform_name}", "#FFD54F"))
-        self.platform_badge.configure(text=text, text_color=color)
+        self.platform_badge.configure(text=plain(text), text_color=color)
 
     def _paste_clipboard(self):
         try:

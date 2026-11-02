@@ -39,6 +39,20 @@ Tác giả: **KhanhNN (a.k.a Cao Thanh Lam)**
 
 ---
 
+## 📥 Tải Về & Dùng Ngay (không cần cài Python)
+
+Tải bản mới nhất tại **[Releases](https://github.com/Khanh1916/media-to-mp3/releases/latest)**: một file duy nhất (~22–25 MB), đã kèm sẵn FFmpeg.
+
+| Hệ điều hành | File | Cách chạy |
+|---|---|---|
+| Windows 10 / 11 (64-bit) | `MediaToMP3-x.y.z-windows-x64.exe` | Mở file. Nếu Windows báo *"Windows protected your PC"* (app chưa có chữ ký số), bấm **More info → Run anyway**. |
+| Linux 64-bit (Ubuntu 22.04+, Debian 12+, Fedora 36+...) | `MediaToMP3-x.y.z-linux-x64.tar.gz` | Giải nén rồi chạy `./MediaToMP3`. |
+
+Chạy `MediaToMP3 --check` để tự kiểm tra chuyển đổi, ảnh bìa, cắt ghép (không cần mạng).
+Muốn chạy từ mã nguồn thì làm theo hướng dẫn bên dưới.
+
+---
+
 ## 🚀 Hướng Dẫn Cài Đặt & Sử Dụng
 
 ### 1. Yêu cầu hệ thống
@@ -123,6 +137,9 @@ python main.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 # Chỉ định thư mục lưu trữ:
 ./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -o "D:/MyMusic"
 
+# Tự kiểm tra FFmpeg và các chức năng (không cần mạng):
+./run.sh --check
+
 # Không nhúng ảnh bìa / không tự tách Ca sĩ – Tên bài / hiển thị tiếng Anh:
 ./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" --no-thumbnail --no-tags --lang en
 ```
@@ -163,16 +180,29 @@ python -m unittest discover -s tests -t .
 
 ---
 
-## 📦 Đóng Gói Thành File Thực Thi (.exe hoặc binary)
+## 📦 Đóng Gói & Phát Hành
 
-Bạn có thể đóng gói ứng dụng để chia sẻ cho người khác dùng mà không cần cài đặt Python:
-
+### Build trên máy
 ```bash
-python build_exe.py
+# 1. (Khuyên dùng) Build FFmpeg tối giản ~5 MB thay cho bản đầy đủ ~80 MB (chạy trên Linux / WSL / Docker):
+bash packaging/build_ffmpeg.sh windows out-ffmpeg      # hoặc: linux
+
+# 2. Đóng gói thành một file chạy duy nhất:
+python build_exe.py --ffmpeg out-ffmpeg/ffmpeg.exe --release
 ```
-Sau khi build xong:
-- **Windows**: File chạy `.exe` nằm trong thư mục `dist/MediaToMP3/MediaToMP3.exe`.
-- **Linux**: File binary nằm trong thư mục `dist/MediaToMP3/MediaToMP3`.
+- Kết quả: `dist/MediaToMP3.exe` (Windows) hoặc `dist/MediaToMP3` (Linux). `--release` tạo thêm file mang số phiên bản trong `dist/release/`.
+- Không truyền `--ffmpeg` thì dùng FFmpeg của `imageio-ffmpeg` (file chạy nặng thêm ~30 MB).
+- `build_ffmpeg.sh` cần `build-essential nasm pkg-config curl xz-utils`, thêm `gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64 mingw-w64-x86-64-dev` khi build cho Windows.
+
+### Phát hành bản mới (GitHub Actions tự build)
+1. Tăng số phiên bản trong `version.py`, merge vào `main`.
+2. Gắn tag trùng số phiên bản và đẩy lên:
+   ```bash
+   git tag v1.0.0 && git push origin v1.0.0
+   ```
+3. Workflow **Build & Release** build FFmpeg tối giản, đóng gói Windows + Linux, chạy `--check` trên chính file đã đóng gói, rồi tạo Release kèm file tải về và `SHA256SUMS.txt`.
+
+Mỗi pull request cũng được build và tự kiểm tra như vậy (không phát hành).
 
 ---
 
@@ -191,12 +221,17 @@ media-to-mp3/
 ├── config.py            # Lưu / đọc cài đặt người dùng (JSON)
 ├── i18n.py              # Chuỗi giao diện Tiếng Việt / English
 ├── platform_utils.py    # Mở thư mục / phát file theo hệ điều hành
+├── selftest.py          # Tự kiểm tra (--check): FFmpeg, chuyển đổi, ảnh bìa, cắt ghép
+├── version.py           # Số phiên bản
 ├── tests/               # Bộ kiểm thử (unittest)
-├── build_exe.py         # Script đóng gói ứng dụng với PyInstaller
+├── build_exe.py         # Đóng gói thành một file chạy với PyInstaller
+├── packaging/           # Script build FFmpeg tối giản, icon, ghi chú phát hành
+├── .github/workflows/   # GitHub Actions: tự build & phát hành bản Windows / Linux
 ├── setup_venv.sh        # Script khởi tạo môi trường ảo Python và cài đặt thư viện
 ├── run.sh               # Script chạy nhanh ứng dụng qua môi trường ảo .venv
 ├── requirements.txt     # Danh sách thư viện phụ thuộc
 ├── LICENSE              # Giấy phép MIT
+├── THIRD_PARTY_NOTICES.md # Giấy phép các thành phần đóng gói kèm (FFmpeg, yt-dlp...)
 ├── README.md            # Tài liệu hướng dẫn sử dụng (Tiếng Việt)
 └── README_EN.md         # Tài liệu hướng dẫn sử dụng (Tiếng Anh)
 ```

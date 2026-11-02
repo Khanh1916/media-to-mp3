@@ -1,6 +1,7 @@
 import os
 import re
 import shutil
+import sys
 import logging
 from typing import Callable, Optional, Dict, Any, Tuple
 
@@ -142,10 +143,17 @@ class _YtdlLogger:
 def get_ffmpeg_path() -> Optional[str]:
     """
     Tìm đường dẫn FFmpeg:
-    1. Kiểm tra FFmpeg có sẵn trong biến môi trường PATH hệ thống (Windows / Linux).
-    2. Nếu không có, tìm bản binary tích hợp từ imageio-ffmpeg.
-    3. Trả về đường dẫn executable hoặc None.
+    1. Bản FFmpeg đóng gói kèm file chạy (bản phát hành build bằng PyInstaller).
+    2. FFmpeg có sẵn trong biến môi trường PATH hệ thống (Windows / Linux).
+    3. Nếu không có, tìm bản binary tích hợp từ imageio-ffmpeg.
+    4. Trả về đường dẫn executable hoặc None.
     """
+    bundle_dir = getattr(sys, "_MEIPASS", None)
+    if bundle_dir:
+        bundled = os.path.join(bundle_dir, "ffmpeg.exe" if sys.platform.startswith("win") else "ffmpeg")
+        if os.path.isfile(bundled):
+            return bundled
+
     system_ffmpeg = shutil.which("ffmpeg")
     if system_ffmpeg:
         return system_ffmpeg

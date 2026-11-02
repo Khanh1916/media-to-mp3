@@ -1,6 +1,13 @@
 import os
 import platform
 import subprocess
+import sys
+
+
+def resource_path(relative: str) -> str:
+    """Đường dẫn tới file đi kèm app, dùng được cả khi chạy mã nguồn lẫn bản đóng gói PyInstaller"""
+    base = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base, relative)
 
 
 def open_path_in_explorer(path: str):

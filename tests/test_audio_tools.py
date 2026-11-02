@@ -83,7 +83,7 @@ class ExportIntegrationTest(unittest.TestCase):
     def setUpClass(cls):
         cls.tmp = tempfile.mkdtemp()
         cls.sources = []
-        for name, freq, dur in (("a.mp3", 440, 8), ("b.wav", 660, 6)):
+        for name, freq, dur in (("a.mp3", 440, 8), ("b.wav", 660, 6), ("c.flac", 880, 5)):
             path = os.path.join(cls.tmp, name)
             subprocess.run([get_ffmpeg_path(), "-v", "error", "-y", "-f", "lavfi", "-i",
                             f"sine=frequency={freq}:duration={dur}", "-metadata", f"title=Tone {freq}",
@@ -118,6 +118,13 @@ class ExportIntegrationTest(unittest.TestCase):
             self.assertEqual(progress[-1], 1.0)
             if fmt != "wav":
                 self.assertEqual(info.title, "Ghép")
+
+    def test_crossfade_into_flac(self):
+        # acrossfade từng ra file rỗng khi đoạn sau là FLAC (khung 4608 mẫu)
+        clips = [at.ClipSpec(self.sources[0], 0, 3), at.ClipSpec(self.sources[2], 1, 4)]
+        out = os.path.join(self.tmp, "into_flac.wav")
+        at.run_export(at.build_export_command(clips, out, fmt="wav", crossfade=1), 5)
+        self.assertAlmostEqual(at.probe(out).duration, 5, delta=0.1)
 
     def test_refuses_to_overwrite_an_input(self):
         cmd = at.build_export_command([at.ClipSpec(self.sources[0], 0, 2)], self.sources[0])
