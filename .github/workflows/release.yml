@@ -136,7 +136,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          sed "s/{version}/${GITHUB_REF_NAME#v}/g" packaging/release_notes.md > release_notes.md
           gh release create "$GITHUB_REF_NAME" assets/* \
             --repo "$GITHUB_REPOSITORY" \
             --title "Media to MP3 $GITHUB_REF_NAME" \
-            --notes-file packaging/release_notes.md
+            --notes-file release_notes.md

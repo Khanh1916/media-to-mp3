@@ -4,62 +4,62 @@
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgrey.svg)](https://github.com/Khanh1916/media-to-mp3)
 
-[English](README_EN.md) | [Tiếng Việt](README.md)
+[English](README.md) | [Tiếng Việt](README_VI.md)
 
-Ứng dụng tải video từ **YouTube** và **Facebook** thành file nhạc **MP3 (lên đến 320 kbps), M4A, WAV hoặc FLAC**, kèm công cụ **cắt, ghép nhạc** ngay trong app. Chạy được trên cả **Windows** và **Linux**, giao diện **Tiếng Việt / English**.
+A desktop tool and CLI utility that downloads videos from **YouTube** and **Facebook** as **MP3 (up to 320 kbps), M4A, WAV or FLAC** audio, with a built-in **cut & join** music editor. Runs on **Windows** and **Linux**, with an **English / Vietnamese** interface.
 
-Tác giả: **KhanhNN (a.k.a Cao Thanh Lam)**
+Author: **KhanhNN (a.k.a Cao Thanh Lam)**
 
 ---
 
-## ✨ Tính Năng Nổi Bật
+## ✨ Key Features
 
-- 📋 **Tự động bắt link thông minh**: Khi bạn sao chép (Ctrl+C) link video YouTube hoặc Facebook, ứng dụng tự phát hiện và hỏi có thêm vào hàng đợi tải không.
-- 📥 **Hàng đợi tải**: Dán một hoặc nhiều link cùng lúc, app tải lần lượt từng bài. Mỗi bài có tiến trình riêng, hủy / thử lại / bỏ khỏi danh sách được.
-- 🔊 **Nhiều định dạng, phát được trên loa đài**: Tất cả xuất ra chuẩn **44.1 kHz / 16-bit** (chuẩn CD):
-  | Định dạng | Ghi chú |
+- 📋 **Smart Clipboard Auto-detection**: Copy (`Ctrl+C`) a YouTube or Facebook video link and the app asks whether to add it to the download queue.
+- 📥 **Download Queue**: Paste one or many links at once; they download one after another, each with its own progress and cancel / retry / remove buttons.
+- 🔊 **Stereo-friendly Formats**: Everything is exported at **44.1 kHz / 16-bit** (CD standard):
+  | Format | Notes |
   |---|---|
-  | **MP3** (320 / 192 / 128 kbps) | Phát được trên mọi loa, đài, đầu xe hơi và điện thoại. Tag ID3v2.3 để đầu đọc đời cũ cũng hiện tên bài. |
-  | **M4A (AAC)** | Giữ nguyên AAC gốc, không nén lại. Đầu xe, điện thoại, loa Bluetooth đời mới phát tốt. |
-  | **WAV** | Gần như đài nào cũng đọc được, nhưng file nặng (~10 MB/phút), không có ảnh bìa. |
-  | **FLAC** | Không mất dữ liệu. Đầu xe, loa đời mới thường hỗ trợ. |
+  | **MP3** (320 / 192 / 128 kbps) | Plays on every speaker, stereo, car head unit and phone. ID3v2.3 tags so older units still show track names. |
+  | **M4A (AAC)** | Keeps YouTube's original AAC audio, no re-encoding. Plays well on modern car units, phones and Bluetooth speakers. |
+  | **WAV** | Readable by almost any stereo, but large (~10 MB/min) and no cover art. |
+  | **FLAC** | Lossless. Usually supported by newer car units and speakers. |
   
-  Opus / OGG không được hỗ trợ vì nhiều thiết bị phần cứng không đọc được.
-- 🖼️ **Ảnh bìa & tag tự động**: Nhúng ảnh bìa JPEG vuông 600×600 và tự tách **Ca sĩ – Tên bài** từ tiêu đề video (bỏ các phần như `(Official Video)`, `| OFFICIAL MV`). Bật / tắt được trong phần cài đặt.
-- ✂️ **Cắt & ghép nhạc**:
-  - Thêm nhiều file nhạc (hoặc bấm *Cắt ghép* ngay ở bài vừa tải xong), sắp xếp thứ tự để ghép.
-  - Kéo chọn đoạn cần giữ trên **dạng sóng**, hoặc nhập thời gian chính xác (vd. `1:23.5`).
-  - **Nghe thử** đoạn đã chọn ngay trong app.
-  - Hiệu ứng: **fade in / fade out**, **chuyển mượt (crossfade)** giữa các đoạn, chỉnh **âm lượng**, **cân bằng độ to** (loudnorm).
-  - Sửa tên bài / ca sĩ, giữ ảnh bìa, xuất ra MP3 / M4A / WAV / FLAC.
-- 💾 **Ghi nhớ cài đặt**: Thư mục lưu, định dạng, chất lượng, ngôn ngữ, kích thước cửa sổ... được giữ lại cho lần mở sau.
-- 🌐 **Song ngữ Việt / Anh**: Đổi ngôn ngữ ngay trên giao diện, không cần khởi động lại.
-- 🐧 **Đa nền tảng**: Windows 10/11 và Linux (Ubuntu, Debian, Fedora, Arch...). Không cần cài FFmpeg thủ công vì đã có sẵn bản tích hợp qua `imageio-ffmpeg`.
-- 💻 **Hai chế độ**: Giao diện đồ họa (GUI) Dark Mode, và dòng lệnh (CLI) cho Terminal / máy chủ.
+  Opus / OGG are left out because many hardware players can't read them.
+- 🖼️ **Automatic Cover Art & Tags**: Embeds a square 600×600 JPEG cover and detects **Artist – Title** from the video title (dropping parts such as `(Official Video)` or `| OFFICIAL MV`). Both can be turned off in the settings.
+- ✂️ **Cut & Join Music**:
+  - Add several audio files (or click *Edit* on a finished download) and order them for joining.
+  - Drag on the **waveform** to pick the part to keep, or type exact times (e.g. `1:23.5`).
+  - **Preview** the selection right inside the app.
+  - Effects: **fade in / fade out**, **crossfade** between clips, **volume**, **loudness normalization** (loudnorm).
+  - Edit title / artist, keep the cover art, export to MP3 / M4A / WAV / FLAC.
+- 💾 **Remembered Settings**: Output folder, format, quality, language, window size... are kept for next time.
+- 🌐 **English / Vietnamese UI**: Switch language from the window header, no restart needed.
+- 🐧 **Cross-Platform**: Windows 10/11 and Linux (Ubuntu, Debian, Fedora, Arch, etc.). No manual FFmpeg install: a static FFmpeg binary ships with `imageio-ffmpeg`.
+- 💻 **Dual Mode**: Dark-themed GUI, plus a CLI for terminals and headless servers.
 
 ---
 
-## 📥 Tải Về & Dùng Ngay (không cần cài Python)
+## 📥 Download & Run (no Python needed)
 
-Tải bản mới nhất tại **[Releases](https://github.com/Khanh1916/media-to-mp3/releases/latest)**: một file duy nhất (~22–25 MB), đã kèm sẵn FFmpeg.
+Get the latest build from **[Releases](https://github.com/Khanh1916/media-to-mp3/releases/latest)**: a single file (~22–25 MB) with FFmpeg built in.
 
-| Hệ điều hành | File | Cách chạy |
+| OS | File | How to run |
 |---|---|---|
-| Windows 10 / 11 (64-bit) | `MediaToMP3-x.y.z-windows-x64.exe` | Mở file. Nếu Windows báo *"Windows protected your PC"* (app chưa có chữ ký số), bấm **More info → Run anyway**. |
-| Linux 64-bit (Ubuntu 22.04+, Debian 12+, Fedora 36+...) | `MediaToMP3-x.y.z-linux-x64.tar.gz` | Giải nén rồi chạy `./MediaToMP3`. |
+| Windows 10 / 11 (64-bit) | `MediaToMP3-x.y.z-windows-x64.exe` | Open it. If Windows shows *"Windows protected your PC"* (the app is not code-signed), click **More info → Run anyway**. |
+| Linux 64-bit (Ubuntu 22.04+, Debian 12+, Fedora 36+...) | `MediaToMP3-x.y.z-linux-x64.tar.gz` | Extract it and run `./MediaToMP3`. |
 
-Chạy `MediaToMP3 --check` để tự kiểm tra chuyển đổi, ảnh bìa, cắt ghép (không cần mạng).
-Muốn chạy từ mã nguồn thì làm theo hướng dẫn bên dưới.
+Run `MediaToMP3 --check` for an offline self-check of conversion, cover art and cut & join.
+To run from source instead, follow the steps below.
 
 ---
 
-## 🚀 Hướng Dẫn Cài Đặt & Sử Dụng
+## 🚀 Installation & Setup
 
-### 1. Yêu cầu hệ thống
-- Đã cài đặt **Python 3.10+** trên máy tính.
+### 1. Prerequisites
+- **Python 3.10+** installed on your system.
 
-### 2. Cài đặt môi trường Python (khuyến nghị cho Linux/macOS)
-Với Ubuntu/Debian, Python hệ thống thường báo `externally-managed-environment` khi chạy `pip install` trực tiếp. Cách an toàn nhất là dùng virtual environment `.venv`:
+### 2. Python Environment Setup (Recommended for Linux/macOS)
+On Ubuntu/Debian, installing packages via pip system-wide often triggers `externally-managed-environment` errors. The safest approach is using a virtual environment `.venv`:
 
 ```bash
 cd ~/media-to-mp3
@@ -69,7 +69,7 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-Nếu muốn rút ngắn, có sẵn 2 script trong repo:
+Alternatively, use the pre-configured helper scripts:
 
 ```bash
 cd ~/media-to-mp3
@@ -77,17 +77,17 @@ cd ~/media-to-mp3
 ./run.sh
 ```
 
-`setup_venv.sh` sẽ tạo `.venv` nếu chưa có và cài các package cần thiết. `run.sh` sẽ chạy app bằng Python trong `.venv` mà không cần phải activate từng lần.
+`setup_venv.sh` creates `.venv` if it doesn't exist and installs all dependencies. `run.sh` executes the application using the Python interpreter inside `.venv` without needing to activate it manually.
 
-> **Lưu ý trên Linux**:
-> Nếu dùng Ubuntu/Debian và gặp thông báo thiếu Tkinter hoặc xclip, chỉ cần chạy:
+> **Note for Linux Users**:
+> If you are on Ubuntu/Debian and encounter missing Tkinter or clipboard errors, install system dependencies:
 > ```bash
 > sudo apt update
 > sudo apt install python3-tk xclip ffmpeg -y
 > ```
-> Nút *Nghe đoạn chọn* dùng `paplay` / `pw-play` / `aplay` (Ubuntu desktop có sẵn).
+> The *Play selection* button uses `paplay` / `pw-play` / `aplay` (available on Ubuntu desktop).
 
-> **Chạy trực tiếp không cần activate**:
+> **Run directly without activating virtualenv**:
 > ```bash
 > cd ~/media-to-mp3
 > .venv/bin/python main.py
@@ -95,84 +95,84 @@ cd ~/media-to-mp3
 
 ---
 
-## 🎯 Cách Khởi Chạy
+## 🎯 How to Run
 
-### Cách 1: Chạy giao diện đồ họa (GUI)
-Với venv đã được kích hoạt:
+### Method 1: Graphical User Interface (GUI)
+With the virtual environment activated:
 ```bash
 python main.py
 ```
-Hoặc chạy trực tiếp bằng file script đã chuẩn bị:
+Or run the launcher script directly:
 ```bash
 ./run.sh
 ```
 
-**Tab ⬇ Tải nhạc**
-1. Copy link video YouTube / Facebook trên trình duyệt: app tự bắt link và hỏi có thêm vào hàng đợi không.
-2. Hoặc dán một hay nhiều link vào ô nhập rồi bấm **➕ Thêm vào hàng đợi**.
-3. Chọn định dạng, chất lượng, thư mục lưu. Bài tải xong có các nút *Thư mục*, *Nghe*, *Cắt ghép*.
+**⬇ Download tab**
+1. Copy a YouTube / Facebook video URL in your browser: the app catches it and asks whether to queue it.
+2. Or paste one or more links into the input and click **➕ Add to queue**.
+3. Pick the format, quality and output folder. Finished items get *Folder*, *Play* and *Edit* buttons.
 
-**Tab ✂ Cắt & ghép nhạc**
-1. Bấm **➕ Thêm file nhạc...** (hoặc nút *Cắt ghép* ở hàng đợi tải).
-2. Chọn từng đoạn trong danh sách, kéo trên dạng sóng để chọn khoảng cần giữ. Dùng ▲ ▼ để đổi thứ tự ghép.
-3. Thêm hiệu ứng nếu muốn, sửa tên bài / ca sĩ, rồi bấm **💾 Xuất file...**.
+**✂ Cut & Join tab**
+1. Click **➕ Add audio files...** (or *Edit* in the download queue).
+2. Select each clip in the list and drag on the waveform to choose the part to keep. Use ▲ ▼ to change the join order.
+3. Add effects if you like, edit title / artist, then click **💾 Export...**.
 
-Đổi **Tiếng Việt / English** ở góc trên bên phải.
+Switch **Tiếng Việt / English** in the top-right corner.
 
-### Cách 2: Tải nhanh qua dòng lệnh (CLI)
-Dành cho người thích dùng Terminal hoặc chạy trên máy chủ không có giao diện:
+### Method 2: Command Line Interface (CLI)
+Perfect for terminal enthusiasts or headless servers:
 ```bash
-# Tải MP3 320kbps mặc định vào thư mục Music:
+# Download as 320kbps MP3 into the default Music folder:
 ./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-# Hoặc trên Windows:
+# Or on Windows:
 python main.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
-# Tải nhiều link liên tiếp:
+# Download several links in a row:
 ./run.sh "https://youtu.be/LINK1" "https://youtu.be/LINK2"
 
-# Chọn định dạng (mp3, m4a, wav, flac) và chất lượng MP3 (128, 192, 320):
+# Choose the format (mp3, m4a, wav, flac) and MP3 quality (128, 192, 320):
 ./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -f flac
 ./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -b 192
 
-# Chỉ định thư mục lưu trữ:
+# Specify custom output directory:
 ./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -o "D:/MyMusic"
 
-# Tự kiểm tra FFmpeg và các chức năng (không cần mạng):
+# Self-check FFmpeg and the features (no network needed):
 ./run.sh --check
 
-# Không nhúng ảnh bìa / không tự tách Ca sĩ – Tên bài / hiển thị tiếng Anh:
+# No cover art / no Artist – Title detection / English output:
 ./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" --no-thumbnail --no-tags --lang en
 ```
 
-### Nơi lưu cài đặt
+### Where settings are stored
 - **Windows**: `%APPDATA%\MediaToMP3\settings.json`
 - **Linux**: `~/.config/media-to-mp3/settings.json`
 - **macOS**: `~/Library/Application Support/MediaToMP3/settings.json`
 
-Xóa file này để trở về cài đặt mặc định.
+Delete this file to go back to the defaults.
 
 ---
 
-## 🛠️ Khắc Phục Tải Chậm / Lỗi 403 (đặc biệt trên Linux)
+## 🛠️ Troubleshooting Slow Downloads / 403 Errors (especially on Linux)
 
-YouTube thay đổi liên tục, nên yt-dlp cũ hoặc thiếu JavaScript runtime sẽ khiến tải rất chậm, treo lâu hoặc lỗi `HTTP Error 403`.
+YouTube changes frequently, so an outdated yt-dlp or a missing JavaScript runtime leads to very slow downloads, long hangs, or `HTTP Error 403`.
 
-1. **Cập nhật yt-dlp** (chạy lại mỗi khi tải bắt đầu chậm/lỗi):
+1. **Update yt-dlp** (re-run whenever downloads become slow or fail):
    ```bash
    ./setup_venv.sh
    ```
-2. **Cài JavaScript runtime** (yt-dlp dùng để giải mã chữ ký YouTube). Khuyến nghị [Deno](https://deno.com):
+2. **Install a JavaScript runtime** (yt-dlp uses it to solve YouTube's signature challenges). [Deno](https://deno.com) is recommended:
    ```bash
    curl -fsSL https://deno.land/install.sh | sh
    ```
-   App cũng tự dùng `node` (>= 20), `bun` hoặc `quickjs` nếu có sẵn.
-3. **Xem cảnh báo**: chạy app từ Terminal (`./run.sh`), các dòng `[WARNING]` sẽ cho biết nguyên nhân (thiếu JS runtime, mạng phải thử lại, ...).
+   The app also uses `node` (>= 20), `bun` or `quickjs` if available.
+3. **Check the warnings**: run the app from a terminal (`./run.sh`); `[WARNING]` lines show the cause (missing JS runtime, network retries, ...).
 
 ---
 
-## 🧪 Chạy Kiểm Thử
+## 🧪 Running the Tests
 
-Bộ test dùng `unittest` có sẵn của Python (cần FFmpeg cho phần test cắt / ghép, không cần mạng):
+The test suite uses Python's built-in `unittest` (FFmpeg is needed for the cut / join tests; no network access required):
 
 ```bash
 python -m unittest discover -s tests -t .
@@ -180,58 +180,58 @@ python -m unittest discover -s tests -t .
 
 ---
 
-## 📦 Đóng Gói & Phát Hành
+## 📦 Packaging & Releases
 
-### Build trên máy
+### Build locally
 ```bash
-# 1. (Khuyên dùng) Build FFmpeg tối giản ~5 MB thay cho bản đầy đủ ~80 MB (chạy trên Linux / WSL / Docker):
-bash packaging/build_ffmpeg.sh windows out-ffmpeg      # hoặc: linux
+# 1. (Recommended) Build a minimal ~5 MB FFmpeg instead of the full ~80 MB one (on Linux / WSL / Docker):
+bash packaging/build_ffmpeg.sh windows out-ffmpeg      # or: linux
 
-# 2. Đóng gói thành một file chạy duy nhất:
+# 2. Package everything into a single executable:
 python build_exe.py --ffmpeg out-ffmpeg/ffmpeg.exe --release
 ```
-- Kết quả: `dist/MediaToMP3.exe` (Windows) hoặc `dist/MediaToMP3` (Linux). `--release` tạo thêm file mang số phiên bản trong `dist/release/`.
-- Không truyền `--ffmpeg` thì dùng FFmpeg của `imageio-ffmpeg` (file chạy nặng thêm ~30 MB).
-- `build_ffmpeg.sh` cần `build-essential nasm pkg-config curl xz-utils`, thêm `gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64 mingw-w64-x86-64-dev` khi build cho Windows.
+- Output: `dist/MediaToMP3.exe` (Windows) or `dist/MediaToMP3` (Linux). `--release` also writes a versioned file to `dist/release/`.
+- Without `--ffmpeg`, the full FFmpeg from `imageio-ffmpeg` is bundled (~30 MB larger).
+- `build_ffmpeg.sh` needs `build-essential nasm pkg-config curl xz-utils`, plus `gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64 mingw-w64-x86-64-dev` for Windows builds.
 
-### Phát hành bản mới (GitHub Actions tự build)
-1. Tăng số phiên bản trong `version.py`, merge vào `main`.
-2. Gắn tag trùng số phiên bản và đẩy lên:
+### Publishing a release (built by GitHub Actions)
+1. Bump the version in `version.py` and merge into `main`.
+2. Push a matching tag:
    ```bash
    git tag v1.0.0 && git push origin v1.0.0
    ```
-3. Workflow **Build & Release** build FFmpeg tối giản, đóng gói Windows + Linux, chạy `--check` trên chính file đã đóng gói, rồi tạo Release kèm file tải về và `SHA256SUMS.txt`.
+3. The **Build & Release** workflow builds the minimal FFmpeg, packages Windows + Linux, runs `--check` on the packaged files, then creates the Release with the downloads and `SHA256SUMS.txt`.
 
-Mỗi pull request cũng được build và tự kiểm tra như vậy (không phát hành).
+Every pull request is built and self-checked the same way (without publishing).
 
 ---
 
-## 📁 Cấu Trúc Mã Nguồn
+## 📁 Project Structure
 
 ```
 media-to-mp3/
-├── main.py              # Điểm khởi chạy chính (hỗ trợ cả GUI và CLI)
-├── app_ui.py            # Cửa sổ chính: tiêu đề, chọn ngôn ngữ, 2 tab (CustomTkinter)
-├── ui_download.py       # Tab tải nhạc: nhập link, định dạng, hàng đợi
-├── ui_editor.py         # Tab cắt & ghép: danh sách đoạn, dạng sóng, hiệu ứng, xuất file
-├── downloader.py        # Lõi tải video và chuyển đổi âm thanh (yt-dlp + FFmpeg), tách Ca sĩ – Tên bài
-├── download_queue.py    # Hàng đợi tải nhiều bài trong luồng nền
-├── audio_tools.py       # Cắt / ghép / hiệu ứng / dạng sóng / nghe thử bằng FFmpeg
-├── clipboard_monitor.py # Luồng chạy ngầm tự động bắt link YouTube / Facebook
-├── config.py            # Lưu / đọc cài đặt người dùng (JSON)
-├── i18n.py              # Chuỗi giao diện Tiếng Việt / English
-├── platform_utils.py    # Mở thư mục / phát file theo hệ điều hành
-├── selftest.py          # Tự kiểm tra (--check): FFmpeg, chuyển đổi, ảnh bìa, cắt ghép
-├── version.py           # Số phiên bản
-├── tests/               # Bộ kiểm thử (unittest)
-├── build_exe.py         # Đóng gói thành một file chạy với PyInstaller
-├── packaging/           # Script build FFmpeg tối giản, icon, ghi chú phát hành
-├── .github/workflows/   # GitHub Actions: tự build & phát hành bản Windows / Linux
-├── setup_venv.sh        # Script khởi tạo môi trường ảo Python và cài đặt thư viện
-├── run.sh               # Script chạy nhanh ứng dụng qua môi trường ảo .venv
-├── requirements.txt     # Danh sách thư viện phụ thuộc
-├── LICENSE              # Giấy phép MIT
-├── THIRD_PARTY_NOTICES.md # Giấy phép các thành phần đóng gói kèm (FFmpeg, yt-dlp...)
-├── README.md            # Tài liệu hướng dẫn sử dụng (Tiếng Việt)
-└── README_EN.md         # Tài liệu hướng dẫn sử dụng (Tiếng Anh)
+├── main.py              # Main entry point (supports both GUI and CLI)
+├── app_ui.py            # Main window: header, language switch, 2 tabs (CustomTkinter)
+├── ui_download.py       # Download tab: link input, formats, queue
+├── ui_editor.py         # Cut & Join tab: clip list, waveform, effects, export
+├── downloader.py        # Core download & audio conversion (yt-dlp + FFmpeg), Artist – Title detection
+├── download_queue.py    # Background queue that downloads items one by one
+├── audio_tools.py       # Cut / join / effects / waveform / preview with FFmpeg
+├── clipboard_monitor.py # Background thread for auto-detecting YouTube & Facebook links
+├── config.py            # Save / load user settings (JSON)
+├── i18n.py              # English / Vietnamese UI strings
+├── platform_utils.py    # Open folders / play files per operating system
+├── selftest.py          # Self-check (--check): FFmpeg, conversion, cover art, cut & join
+├── version.py           # Version number
+├── tests/               # Test suite (unittest)
+├── build_exe.py         # Single-file packaging with PyInstaller
+├── packaging/           # Minimal FFmpeg build script, icon, release notes
+├── .github/workflows/   # GitHub Actions: build & publish Windows / Linux releases
+├── setup_venv.sh        # Helper script to setup Python virtual environment
+├── run.sh               # Launcher script to run the app via .venv
+├── requirements.txt     # Python package dependencies
+├── LICENSE              # MIT License
+├── THIRD_PARTY_NOTICES.md # Licenses of bundled components (FFmpeg, yt-dlp...)
+├── README.md            # Documentation (English)
+└── README_VI.md         # Documentation (Vietnamese)
 ```
