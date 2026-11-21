@@ -147,6 +147,7 @@ cargo fmt -- --check
 This repository provides standardized context and instruction files for autonomous coding agents:
 
 - **[AGENTS.md](AGENTS.md)**: Universal agent guide covering architecture, threading discipline, and code style.
+- **[CLAUDE.md](CLAUDE.md)**: Anthropic Claude Code developer instructions and commands.
 - **[.cursorrules](.cursorrules)**: Coding standards for Cursor AI IDE.
 - **[.github/copilot-instructions.md](.github/copilot-instructions.md)**: Instructions for GitHub Copilot Workspace.
 - **[.gemini/GEMINI.md](.gemini/GEMINI.md)**: Agent instructions for Gemini CLI and Google Antigravity.
@@ -173,6 +174,7 @@ media-to-mp3/
 ├── rustfmt.toml                 # Code formatting rules
 ├── clippy.toml                  # Linter MSRV settings
 ├── AGENTS.md                    # Universal AI agent instructions
+├── CLAUDE.md                    # Claude Code instructions
 ├── .cursorrules                 # Cursor rules
 ├── CONTRIBUTING.md              # Contributor guidelines
 ├── CODE_OF_CONDUCT.md          # Contributor Covenant 2.1

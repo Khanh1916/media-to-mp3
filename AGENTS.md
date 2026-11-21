@@ -1,6 +1,6 @@
 # AGENTS.md — Universal Agent Instructions & Developer Guide
 
-Welcome, autonomous agent! This document is the unified guide for AI coding agents (including OpenAI Codex, Google Antigravity / Gemini CLI, Cursor, and GitHub Copilot) working in this repository.
+Welcome, autonomous agent! This document is the unified guide for AI coding agents (including Anthropic Claude Code, OpenAI Codex, Google Antigravity / Gemini CLI, Cursor, and GitHub Copilot) working in this repository.
 
 ---
 
@@ -23,6 +23,9 @@ media-to-mp3/
 ├── Cargo.toml            # Rust manifest, dependencies, optimized release profiles
 ├── rustfmt.toml          # Code formatting rules
 ├── clippy.toml           # Linter configuration (MSRV 1.80.0)
+├── AGENTS.md             # Universal AI Agent Specification
+├── CLAUDE.md             # Claude Code development guidelines
+├── .cursorrules          # Cursor AI IDE rules
 ├── run.bat               # Windows launcher & auto-builder
 ├── run.sh                # Linux / macOS launcher script
 ├── src/

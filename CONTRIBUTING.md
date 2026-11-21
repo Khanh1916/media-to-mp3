@@ -77,9 +77,10 @@ Before submitting any code, verify that all quality checks pass cleanly:
 
 ---
 
-## 🤖 AI Agent Guidelines
+## AI Agent Guidelines
 
-If you are using autonomous AI coding tools (Antigravity, OpenAI Codex, Cursor, Copilot, etc.), refer to:
+If you are using autonomous AI coding tools (Claude Code, Antigravity, OpenAI Codex, Cursor, Copilot, etc.), refer to:
 - [AGENTS.md](AGENTS.md)
+- [CLAUDE.md](CLAUDE.md)
 - [.cursorrules](.cursorrules)
 - [.github/copilot-instructions.md](.github/copilot-instructions.md)
