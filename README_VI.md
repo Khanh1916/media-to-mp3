@@ -1,4 +1,4 @@
-# 🎵 Media to MP3 Downloader (YouTube & Facebook)
+# Media to MP3 Downloader
 
 [![CI](https://github.com/Khanh1916/media-to-mp3/actions/workflows/ci.yml/badge.svg)](https://github.com/Khanh1916/media-to-mp3/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/Khanh1916/media-to-mp3)](https://github.com/Khanh1916/media-to-mp3/releases)
@@ -8,66 +8,67 @@
 
 [English](README.md) | [Tiếng Việt](README_VI.md)
 
-Ứng dụng máy tính và công cụ dòng lệnh (CLI) thuần **Rust**, chuyên tải video từ **YouTube** và **Facebook** thành file âm thanh chất lượng cao **MP3 (lên đến 320 kbps), M4A, WAV hoặc FLAC**, tích hợp sẵn công cụ **chỉnh sửa, cắt & ghép nhạc trực quan**.
+Ứng dụng máy tính và công cụ dòng lệnh hiệu năng cao được xây dựng hoàn toàn bằng ngôn ngữ Rust. Media to MP3 hỗ trợ tải luồng âm thanh từ video YouTube và Facebook thành các định dạng chất lượng cao (MP3, M4A, FLAC, WAV), đồng thời tích hợp trình biên tập âm thanh dạng sóng trực quan phục vụ việc cắt, ghép và chuẩn hóa âm lượng.
 
-Được tái cấu trúc và phát triển toàn diện bằng ngôn ngữ **Rust** nguyên bản kết hợp **eframe / egui**, đem lại tốc độ mở tức thì, dung lượng siêu nhẹ (~7.6 MB), không phụ thuộc môi trường Python, cùng giao diện Dark Mode phong cách Slate/Obsidian chuyên nghiệp, tinh tế.
+Được phát triển với eframe và egui, ứng dụng được biên dịch thành một file thực thi độc lập duy nhất (~7.6 MB) với tốc độ khởi động tức thì, mức chiếm dụng RAM cực thấp (<30 MB) và không phụ thuộc vào bất kỳ môi trường Python hay runtime bên ngoài nào.
 
-Tác giả: **KhanhNN (a.k.a Cao Thanh Lam)**
-
----
-
-## ✨ Tính Năng Nổi Bật
-
-- ⚡ **Thuần Rust & Siêu Nhẹ**: File thực thi độc lập duy nhất chỉ ~7.6 MB, khởi động tức thì trong chớp mắt, chiếm cực ít RAM (<30 MB) và không cần cài đặt Python hay môi trường ảo phức tạp.
-- 🎨 **Giao Diện Đồ Họa Bản Quyền (Không Dùng Template AI Cẩu Thả)**:
-  - Thiết kế theo tiêu chuẩn công thái học: Tông màu tối Slate/Obsidian (`#0f1117`, `#181c26`), điểm nhấn Indigo thanh lịch (`#6366f1`), font chữ rõ ràng, độ tương phản chuẩn.
-  - Phân chia tab rõ ràng: **⬇ Hàng Đợi Tải Nhạc** và **✂ Cắt & Ghép Nhạc**.
-  - Trình vẽ dạng sóng âm (waveform canvas) tương tác mượt mà, cho phép kéo thả hai thanh đánh dấu đầu/cuối trực quan.
-  - Hộp thoại chọn file và lưu file gốc hệ điều hành qua `rfd`.
-- 📋 **Tự Động Bắt Link Thông Minh**: Sao chép (`Ctrl+C`) liên kết YouTube hoặc Facebook từ bất kỳ đâu, app tự nhận diện và hiển thị thông báo thêm nhanh vào hàng đợi.
-- 📥 **Hàng Đợi Đa Luồng An Toàn**: Dán nhiều link cùng lúc, xử lý tải nối tiếp hoặc song song với thanh tiến trình trực quan, hiển thị tốc độ, nút Hủy, Thử lại, Mở thư mục và Nghe thử.
-- 🔊 **Tối Ưu Cho Mọi Thiết Bị & Đầu Xe Hơi**: Toàn bộ file xuất ra chuẩn âm thanh phòng thu **44.1 kHz / 16-bit** (chuẩn CD):
-  | Định dạng | Thông số / Khả năng tương thích |
-  |---|---|
-  | **MP3** (320 / 192 / 128 kbps) | Chuẩn toàn cầu, chơi mượt trên mọi dàn loa cổ, đầu xe hơi, điện thoại với đầy đủ thẻ ID3v2.3. |
-  | **M4A (AAC)** | Luồng AAC nguyên bản từ video gốc, không nén lại, giữ trọn vẹn chất âm ban đầu. |
-  | **WAV** | Âm thanh PCM không nén cho các thiết bị âm thanh chuyên nghiệp. |
-  | **FLAC** | Nén không mất dữ liệu (lossless) chuẩn studio. |
-- 🖼️ **Tự Động Làm Sạch Tên & Nhúng Ảnh Bìa**: Tự động tải ảnh bìa vuông chất lượng cao, đồng thời thuật toán regex tự bóc tách chuỗi rác như `[Official MV]`, `(Lyrics Video)` để tạo thẻ **Ca Sĩ – Tên Bài** chuẩn xác.
-- ✂️ **Công Cụ Cắt & Ghép Nhạc Tích Hợp**:
-  - Tải nhiều file nhạc hoặc bấm **✂ Cắt ghép** trực tiếp từ bài vừa tải xong.
-  - Tự do kéo khoảng chọn trên dạng sóng hoặc điền mốc thời gian chính xác từng phần mười giây (`0:15.5`).
-  - Hỗ trợ **fade-in / fade-out**, tăng giảm âm lượng (dB) và **cân bằng âm lượng tự động** EBU R128 (`loudnorm`).
-  - Xuất ra file MP3 / M4A / WAV / FLAC với đầy đủ metadata.
-- 🌐 **Chuyển Đổi Song Ngữ Tức Thì**: Chuyển đổi giữa **Tiếng Việt** và **English** chỉ với 1 click ngay trên thanh tiêu đề mà không cần khởi động lại.
-- 💻 **Đa Năng Cả GUI Lẫn CLI**: Chạy mượt mà dưới dạng giao diện đồ họa hoặc chế độ dòng lệnh headless cho server và script tự động hóa.
+Tác giả: **KhanhNN (Cao Thanh Lam)**
 
 ---
 
-## 🚀 Cài Đặt & Sử Dụng
+## Tính năng nổi bật
 
-### Yêu Cầu Hệ Thống
-- [FFmpeg](https://ffmpeg.org/download.html) và [yt-dlp](https://github.com/yt-dlp/yt-dlp) có sẵn trong biến môi trường `PATH` (hoặc cùng thư mục chạy).
-- [Rust toolchain](https://rustup.rs/) (chỉ cần khi muốn biên dịch từ mã nguồn).
+- **Thuần Rust nguyên bản**: Được biên dịch trực tiếp sang mã máy với tối ưu hóa link-time (LTO) và lược bỏ ký hiệu debug (strip). Không cần cài đặt Python hay thiết lập môi trường ảo.
+- **Giao diện người dùng tối ưu**: Xây dựng theo kiến trúc immediate-mode với bảng màu tối Slate và Obsidian. Cung cấp độ tương phản cao, bố cục thích ứng và sử dụng hộp thoại chọn tệp tin gốc của hệ điều hành qua thư viện `rfd`.
+- **Trình biên tập dạng sóng tương tác**: Trực quan hóa biên độ âm thanh từ dữ liệu PCM thô. Hỗ trợ hai thanh đánh dấu mốc thời gian bắt đầu và kết thúc có thể kéo thả trực tiếp trên đồ thị, nhập thời gian chính xác từng phần mười giây, hiệu ứng làm mờ đầu/cuối (fade in/out), tăng giảm âm lượng và chuẩn hóa âm lượng theo chuẩn EBU R128.
+- **Tự động bắt liên kết từ bộ nhớ tạm**: Luồng chạy ngầm tự động nhận diện liên kết YouTube và Facebook khi người dùng sao chép, cho phép đưa nhanh vào hàng đợi tải chỉ với một thao tác.
+- **Hàng đợi tải đa luồng an toàn**: Xử lý tải bất đồng bộ với thanh tiến trình độc lập cho từng tệp, ước tính tốc độ, hỗ trợ hủy tải và thử lại khi gặp lỗi.
+- **Xử lý siêu dữ liệu và ảnh bìa tự động**: Thuật toán biểu thức chính quy (regex) tự động lọc bỏ các cụm từ thừa trên tiêu đề video (như official video, lyric video, remastered) để trích xuất tên Ca sĩ và Bài hát chuẩn mực, tự động nhúng ảnh bìa vuông và ghi thẻ ID3v2.3.
+- **Giao diện song ngữ**: Chuyển đổi tức thì giữa Tiếng Việt và Tiếng Anh ngay trên thanh điều hướng mà không cần khởi động lại.
+- **Linh hoạt giữa GUI và CLI**: Mặc định khởi chạy giao diện đồ họa, hoặc chạy ở chế độ dòng lệnh headless cho môi trường máy chủ và tự động hóa kịch bản.
 
-### 1. Biên Dịch & Chạy Bằng Cargo
+---
+
+## Định dạng âm thanh hỗ trợ
+
+Tất cả các tệp âm thanh xuất ra đều được chuẩn hóa về chuẩn 44.1 kHz, 16-bit stereo (chuẩn CD) nhằm đảm bảo khả năng tương thích phần cứng tối đa:
+
+| Định dạng | Bitrate / Chế độ | Thiết bị đích phổ biến | Ghi chú tương thích |
+|---|---|---|---|
+| MP3 | 320 / 192 / 128 kbps | Đầu xe hơi, dàn loa cổ, điện thoại | Tương thích toàn diện với thẻ ID3v2.3; đọc tốt trên mọi đầu phát ô tô đời cũ. |
+| M4A (AAC) | Giữ nguyên gốc / AAC | Điện thoại hiện đại, thiết bị Apple | Giữ nguyên vẹn luồng dữ liệu AAC gốc, không giảm chất lượng do nén lại. |
+| WAV | 1411 kbps không nén | Thiết bị phòng thu, phần mềm dựng âm | Âm thanh PCM thô. Tương thích tuyệt đối; không hỗ trợ nhúng ảnh bìa. |
+| FLAC | Nén bảo toàn dữ liệu | Dàn nghe nhạc cao cấp, receiver hiện đại | Chuẩn Free Lossless Audio Codec; giữ đầy đủ toàn bộ siêu dữ liệu. |
+
+---
+
+## Yêu cầu môi trường
+
+- **FFmpeg**: Cần thiết để bóc tách luồng âm thanh, áp dụng bộ lọc và mã hóa định dạng. Cần có sẵn trong biến môi trường `PATH` hoặc đặt tại thư mục làm việc.
+- **yt-dlp**: Cần thiết để phân tích và lấy luồng media từ các nền tảng video. Cần có sẵn trong `PATH` hoặc đặt tại thư mục làm việc.
+- **Bộ công cụ Rust** (1.80+): Chỉ cần thiết nếu bạn muốn tự biên dịch ứng dụng từ mã nguồn.
+
+---
+
+## Hướng dẫn cài đặt và biên dịch
+
+### Biên dịch từ mã nguồn
+
 ```bash
 # Clone kho lưu trữ
 git clone https://github.com/Khanh1916/media-to-mp3.git
 cd media-to-mp3
 
-# Biên dịch bản release tối ưu hoá cao nhất
+# Biên dịch bản release tối ưu hóa
 cargo build --release
 
 # Khởi chạy giao diện
 cargo run --release
 ```
 
-### 2. File Script Chạy Nhanh
-- **Windows**: Nhấp đúp vào `run.bat` hoặc gõ trong Command Prompt:
-  ```cmd
-  run.bat
-  ```
+### Script khởi chạy nhanh
+
+- **Windows**: Chạy file `run.bat` (tự động biên dịch bản release nếu chưa có và khởi động ứng dụng ngay).
 - **Linux / macOS**:
   ```bash
   chmod +x run.sh
@@ -76,114 +77,134 @@ cargo run --release
 
 ---
 
-## 🎯 Hướng Dẫn Sử Dụng
+## Hướng dẫn sử dụng
 
-### Chế Độ Giao Diện Đồ Họa (GUI)
-Khởi động ứng dụng trực tiếp bằng file thực thi:
-- **Tab Tải Nhạc**: Dán một hoặc nhiều link video, chọn định dạng (MP3 320k, 192k, 128k, M4A, FLAC, WAV), bấm **Thêm vào hàng đợi**. Khi hoàn tất, bấm vào biểu tượng Thư mục để mở file hoặc bấm Nghe thử.
-- **Tab Cắt & Ghép**: Bấm **Mở file âm thanh...** hoặc bấm nút **✂ Cắt ghép** từ bài vừa tải về. Kéo thanh chọn trên đồ thị sóng âm, áp dụng hiệu ứng và bấm **Xuất file**.
-- **Chuyển Ngôn Ngữ**: Bấm vào nút cờ ở góc trên bên phải (`🇻🇳 Tiếng Việt` / `🇬🇧 English`).
+### Chế độ giao diện đồ họa (GUI)
 
-### Chế Độ Dòng Lệnh (CLI)
-Truyền URL video trực tiếp để tải nhanh không cần mở cửa sổ:
+Khởi động file thực thi `media-to-mp3` không truyền đối số để vào giao diện chính:
+
+1. **Tab Hàng đợi tải nhạc**:
+   - Dán một hoặc nhiều liên kết video vào ô nhập liệu.
+   - Chọn định dạng mục tiêu bằng thanh nút (MP3 320k, 192k, 128k, M4A, FLAC, WAV).
+   - Nhấn **Thêm vào hàng đợi**. Khi hoàn tất, các nút thao tác xuất hiện cho phép mở thư mục chứa tệp, phát nhạc bằng trình phát mặc định của hệ thống, hoặc chuyển trực tiếp tệp sang tab Cắt & ghép.
+
+2. **Tab Cắt & ghép nhạc**:
+   - Nhấn **Mở file âm thanh** hoặc chuyển tệp từ hàng đợi tải sang.
+   - Kéo hai thanh đánh dấu mốc thời gian bắt đầu và kết thúc trên đồ thị sóng âm để chọn đoạn cần giữ.
+   - Tùy chỉnh các thông số: Làm mờ đầu (giây), Làm mờ cuối (giây), Tăng giảm âm lượng (dB), Cân bằng âm lượng tự động.
+   - Nhấn **Xuất file âm thanh** để chọn vị trí lưu kết quả.
+
+3. **Thanh trạng thái và tiêu đề**:
+   - Hiển thị trực tiếp trạng thái phát hiện của FFmpeg và tiến trình bắt link clipboard ngầm.
+   - Nhấn vào nút chọn ngôn ngữ ở góc trên bên phải để chuyển đổi qua lại giữa Tiếng Việt và English.
+
+### Chế độ dòng lệnh (CLI)
+
+Truyền trực tiếp liên kết video vào câu lệnh để tải nhanh ở chế độ headless:
 
 ```bash
-# Tải MP3 320kbps mặc định vào thư mục Music:
+# Tải tệp MP3 320 kbps mặc định vào thư mục Music:
 ./target/release/media-to-mp3 "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
-# Tải nhiều liên kết liên tiếp:
+# Tải liên tiếp nhiều liên kết trong một lượt:
 ./target/release/media-to-mp3 "https://youtu.be/LINK1" "https://youtu.be/LINK2"
 
-# Chọn định dạng (mp3, m4a, wav, flac) và bitrate (128, 192, 320):
+# Tùy chọn định dạng và bitrate:
 ./target/release/media-to-mp3 "https://www.youtube.com/watch?v=..." -f flac
 ./target/release/media-to-mp3 "https://www.youtube.com/watch?v=..." -b 192
 
 # Chỉ định thư mục lưu trữ tùy chỉnh:
 ./target/release/media-to-mp3 "https://www.youtube.com/watch?v=..." -o "D:/Music"
 
-# Tự kiểm tra toàn diện hệ thống (FFmpeg, codec, bộ lọc, xử lý sóng âm):
+# Chạy bộ tự kiểm tra offline (kiểm tra codec FFmpeg và bộ lọc âm):
 ./target/release/media-to-mp3 --check
 
-# Chạy luồng ngầm tự động giám sát clipboard:
+# Chạy tiến trình ngầm giám sát clipboard không mở cửa sổ:
 ./target/release/media-to-mp3 --monitor
 ```
 
 ---
 
-## 🧪 Kiểm Thử & Đảm Bảo Chất Lượng
+## Kiểm thử tự động
 
-Chạy bộ test hoàn chỉnh gồm 23 unit test và integration test bao quát toàn bộ logic xử lý âm thanh, hàng đợi, lưu trữ cấu hình, bộ lọc:
+Bộ kiểm thử gồm 23 bài test tự động bao quát toàn bộ logic xử lý âm thanh, phân tích mốc thời gian, quản lý cấu hình tệp, đồng bộ hàng đợi và chuẩn hóa tiêu đề:
 
 ```bash
 # Chạy toàn bộ test
-cargo test
+cargo test --all-targets
 
 # Kiểm tra linter nghiêm ngặt
-cargo clippy -- -D warnings
+cargo clippy --all-targets -- -D warnings
 
-# Kiểm tra định dạng code
+# Kiểm tra định dạng mã nguồn
 cargo fmt -- --check
 ```
 
 ---
 
-## 🤖 Hướng Dẫn Cho Các Agent AI Đa Nền Tảng
+## Chỉ dẫn dành cho AI Agent đa nền tảng
 
-Kho lưu trữ tích hợp sẵn các tài liệu hướng dẫn chuẩn chỉ cho mọi công cụ lập trình AI thông dụng:
+Kho lưu trữ cung cấp đầy đủ các tệp ngữ cảnh và chỉ dẫn tiêu chuẩn cho các công cụ AI:
 
-- **[AGENTS.md](AGENTS.md)**: Hướng dẫn tổng quát đa nền tảng (Codex, Devin, Copilot, Gemini)
-- **[CLAUDE.md](CLAUDE.md)**: Hướng dẫn dành riêng cho Anthropic Claude Code
-- **[.cursorrules](.cursorrules)**: Quy tắc dành riêng cho Cursor AI IDE
-- **[.github/copilot-instructions.md](.github/copilot-instructions.md)**: Hướng dẫn cho GitHub Copilot
-- **[.gemini/GEMINI.md](.gemini/GEMINI.md)**: Tài liệu chỉ dẫn cho Gemini CLI & Antigravity
+- **[AGENTS.md](AGENTS.md)**: Chỉ dẫn chung bao quát kiến trúc, nguyên tắc đa luồng và phong cách lập trình.
+- **[CLAUDE.md](CLAUDE.md)**: Cẩm nang phát triển và tham chiếu lệnh cho Anthropic Claude Code.
+- **[.cursorrules](.cursorrules)**: Quy chuẩn code dành riêng cho Cursor AI IDE.
+- **[.github/copilot-instructions.md](.github/copilot-instructions.md)**: Chỉ dẫn cho GitHub Copilot Workspace.
+- **[.gemini/GEMINI.md](.gemini/GEMINI.md)**: Hướng dẫn dành cho Gemini CLI và Google Antigravity.
 
 ---
 
-## 📁 Cấu Trúc Thư Mục Chuẩn Chỉ
+## Cấu trúc kho lưu trữ
 
 ```
 media-to-mp3/
-├── .github/              # Hạ tầng GitHub Actions CI/CD & Community
-│   ├── workflows/        # Tự động hóa CI (kiểm thử đa nền tảng) & Release
-│   ├── ISSUE_TEMPLATE/   # Mẫu báo lỗi và yêu cầu tính năng
+├── .github/
+│   ├── workflows/
+│   │   ├── ci.yml               # CI tự động trên Linux, Windows, macOS
+│   │   └── release.yml          # Tự động đóng gói đa nền tảng khi phát hành
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.md
+│   │   ├── feature_request.md
+│   │   └── config.yml
 │   ├── PULL_REQUEST_TEMPLATE.md
 │   ├── copilot-instructions.md
-│   └── dependabot.yml    # Tự động cập nhật thư viện hàng tuần
-├── Cargo.toml            # Cấu hình gói và thư viện Rust, tối ưu release
-├── Cargo.lock            # Khóa phiên bản dependency chính xác
-├── rustfmt.toml          # Quy chuẩn định dạng mã Rust
-├── clippy.toml           # Cấu hình linter Clippy
-├── AGENTS.md             # Tài liệu agent AI đa nền tảng
-├── CLAUDE.md             # Hướng dẫn Claude Code
-├── .cursorrules          # Cấu hình Cursor AI
-├── CONTRIBUTING.md       # Hướng dẫn đóng góp dự án
-├── CODE_OF_CONDUCT.md   # Quy tắc ứng xử cộng đồng Contributor Covenant 2.1
-├── SECURITY.md           # Chính sách báo cáo lỗ hổng bảo mật
-├── CHANGELOG.md          # Lịch sử thay đổi các phiên bản
-├── run.bat               # Trình chạy nhanh & tự build trên Windows
-├── run.sh                # Trình chạy nhanh trên Linux / macOS
-├── src/                  # Toàn bộ mã nguồn thuần Rust
-│   ├── main.rs           # Điểm khởi chạy (điều phối GUI hoặc CLI)
-│   ├── lib.rs            # Khởi tạo thư viện lõi
-│   ├── gui.rs            # Giao diện đồ họa eframe/egui kèm vẽ waveform
-│   ├── audio.rs          # Xử lý âm thanh FFmpeg (cắt, ghép, bộ lọc, biên độ)
-│   ├── downloader.rs     # Tích hợp yt-dlp, bóc tách luồng & làm sạch metadata
-│   ├── queue.rs          # Quản lý hàng đợi tải đa luồng
-│   ├── clipboard.rs      # Bắt link tự động từ clipboard đa nền tảng
-│   ├── config.rs         # Lưu/đọc cấu hình JSON an toàn (atomic write)
-│   ├── i18n.rs           # Quản lý song ngữ (nhúng file strings.json)
-│   ├── platform.rs       # Mở Explorer/Finder và phát nhạc nền tảng
-│   ├── selftest.rs       # Kiểm tra chuẩn đoán hệ thống offline
-│   ├── version.rs        # Định nghĩa số phiên bản
-│   └── strings.json      # Bản dịch giao diện Tiếng Việt & Tiếng Anh
+│   └── dependabot.yml
+├── Cargo.toml                   # Cấu hình gói và tối ưu hóa bản build release
+├── Cargo.lock
+├── rustfmt.toml                 # Quy tắc định dạng mã nguồn Rust
+├── clippy.toml                  # Thiết lập linter Clippy
+├── AGENTS.md                    # Hướng dẫn AI Agent đa nền tảng
+├── CLAUDE.md                    # Hướng dẫn Claude Code
+├── .cursorrules                 # Quy tắc Cursor
+├── CONTRIBUTING.md              # Quy định đóng góp mã nguồn
+├── CODE_OF_CONDUCT.md          # Quy tắc ứng xử Contributor Covenant 2.1
+├── SECURITY.md                  # Chính sách bảo mật và báo cáo lỗ hổng
+├── CHANGELOG.md                 # Lịch sử thay đổi phiên bản
+├── run.bat                      # Script chạy nhanh và tự build trên Windows
+├── run.sh                       # Script chạy trên Linux và macOS
+├── src/
+│   ├── main.rs                  # Điểm khởi chạy chính và điều phối CLI/GUI
+│   ├── lib.rs                   # Gốc thư viện
+│   ├── gui.rs                   # Giao diện đồ họa eframe/egui và vẽ dạng sóng
+│   ├── audio.rs                 # Tích hợp tiến trình FFmpeg và bộ lọc âm thanh
+│   ├── downloader.rs            # Tích hợp yt-dlp và biểu thức chính quy lọc rác tiêu đề
+│   ├── queue.rs                 # Quản lý hàng đợi tải đa luồng
+│   ├── clipboard.rs             # Bộ lắng nghe clipboard đa nền tảng
+│   ├── config.rs                # Lưu trữ cấu hình JSON nguyên tử (atomic)
+│   ├── i18n.rs                  # Bộ nạp bản dịch song ngữ
+│   ├── platform.rs              # Tương tác trình duyệt tệp và phát nhạc hệ thống
+│   ├── selftest.rs              # Bộ tự kiểm tra chẩn đoán hệ thống offline
+│   ├── version.rs               # Định nghĩa hằng số phiên bản
+│   └── strings.json             # Từ điển song ngữ Tiếng Việt và Tiếng Anh
 ├── tests/
-│   └── test_rust_suite.rs # Bộ kiểm thử tích hợp chuyên sâu
-├── LICENSE               # Giấy phép mã nguồn mở MIT
-└── README.md             # Tài liệu Tiếng Anh
+│   └── test_rust_suite.rs        # Bộ kiểm thử tích hợp chuyên sâu
+├── LICENSE                      # Giấy phép nguồn mở MIT
+├── README.md                    # Tài liệu Tiếng Anh
+└── README_VI.md                 # Tài liệu Tiếng Việt
 ```
 
 ---
 
-## 📄 Giấy Phép
+## Giấy phép
 
-Dự án được phân phối dưới giấy phép [MIT License](LICENSE).
+Dự án được phân phối dưới [Giấy phép MIT](LICENSE).

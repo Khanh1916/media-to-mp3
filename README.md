@@ -1,4 +1,4 @@
-# 🎵 Media to MP3 Downloader (YouTube & Facebook)
+# Media to MP3 Downloader
 
 [![CI](https://github.com/Khanh1916/media-to-mp3/actions/workflows/ci.yml/badge.svg)](https://github.com/Khanh1916/media-to-mp3/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/Khanh1916/media-to-mp3)](https://github.com/Khanh1916/media-to-mp3/releases)
@@ -8,65 +8,67 @@
 
 [English](README.md) | [Tiếng Việt](README_VI.md)
 
-A pure **Rust** desktop application and CLI tool that downloads videos from **YouTube** and **Facebook** as high-fidelity **MP3 (up to 320 kbps), M4A, WAV, or FLAC** audio, featuring a built-in **interactive audio editor (cut & join)**. 
+A high-performance, standalone desktop application and command-line utility built in pure Rust. Media to MP3 downloads video streams from YouTube and Facebook as high-fidelity audio (MP3, M4A, FLAC, WAV) and provides an integrated waveform audio editor for trimming, concatenating, and normalizing audio tracks.
 
-Engineered from the ground up in native Rust with **eframe / egui**, providing an ultra-lightweight binary (~7.6 MB), instantaneous startup, zero Python dependencies, and an elegant Slate/Obsidian dark aesthetic.
+Engineered with eframe and egui, the application compiles into a single, compact binary (~7.6 MB) with instant launch, minimal memory usage (<30 MB RAM), and zero external runtime dependencies.
 
-Author: **KhanhNN (a.k.a Cao Thanh Lam)**
-
----
-
-## ✨ Key Features
-
-- ⚡ **Pure Native Rust & Ultra Lightweight**: Single standalone binary (~7.6 MB), instant launch, minimal memory footprint (<30 MB RAM), and zero external runtimes needed.
-- 🎨 **Modern Native GUI (No AI Templates)**:
-  - Engineered with clean human-centered UX patterns: Slate/Obsidian dark palette (`#0f1117`, `#181c26`), subtle Indigo accents (`#6366f1`), high contrast typography, and custom vector icons.
-  - Interactive multi-tab layout: **⬇ Download Queue** and **✂ Cut & Join Editor**.
-  - Interactive canvas waveform renderer with real-time draggable selection markers.
-  - Native OS file dialogs via `rfd`.
-- 📋 **Smart Clipboard Auto-detection**: Copy (`Ctrl+C`) any YouTube or Facebook link and the app automatically captures and prompts to queue it for download.
-- 📥 **Thread-Safe Download Queue**: Paste single or batch URLs; items download concurrently or sequentially with live progress bars, speed metrics, and cancel/retry controls.
-- 🔊 **Stereo & Car Audio Friendly Formats**: All audio conforms to the **44.1 kHz / 16-bit** CD standard:
-  | Format | Profile / Details |
-  |---|---|
-  | **MP3** (320 / 192 / 128 kbps) | Universal compatibility across all car stereos, home theaters, and phones with ID3v2.3 tags. |
-  | **M4A (AAC)** | Pure untouched AAC stream from source without re-encoding quality loss. |
-  | **WAV** | Uncompressed PCM audio for hardware studio / older audio deck compatibility. |
-  | **FLAC** | Bit-perfect lossless compression. |
-- 🖼️ **Intelligent Tag & Cover Art Extraction**: Automatically downloads and embeds high-resolution square cover art, and cleans noisy video titles (e.g., stripping `[Official MV]`, `(Lyrics Video)`) into pristine **Artist – Title** tags.
-- ✂️ **Integrated Audio Editor**:
-  - Load multiple tracks, drag selection bounds on the live waveform, or type sub-second timestamps (`0:15.5`).
-  - Audio post-processing: **fade-in / fade-out**, volume gain adjustment (dB), and EBU R128 **loudness normalization** (`loudnorm`).
-  - Direct export to MP3 / M4A / WAV / FLAC with metadata preservation.
-- 🌐 **Instant Bilingual Toggle**: Switch on-the-fly between **Tiếng Việt** and **English** without restarting.
-- 💻 **Versatile Dual Operation**: Run with a graphical user interface (GUI) or as a headless Command Line Interface (CLI) for scripts and remote servers.
+Author: **KhanhNN (Cao Thanh Lam)**
 
 ---
 
-## 🚀 Quick Start
+## Features
 
-### Prerequisites
-- [FFmpeg](https://ffmpeg.org/download.html) and [yt-dlp](https://github.com/yt-dlp/yt-dlp) in your system `PATH` (or current directory).
-- [Rust toolchain](https://rustup.rs/) (only if compiling from source).
+- **Pure Native Rust**: Compiled directly to machine code with link-time optimization (LTO) and binary stripping. Zero Python runtime or virtual environment required.
+- **Utilitarian Desktop GUI**: Built using an immediate-mode architecture with an Obsidian and Slate dark palette. Provides high-contrast typography, responsive layout, and native system dialogs via `rfd`.
+- **Integrated Waveform Editor**: Visualizes audio amplitude using downsampled PCM data. Supports interactive draggable start and end markers, sub-second precision inputs, fade in/out curves, volume gain, and EBU R128 loudness normalization.
+- **Automated Clipboard Listener**: Monitors the system clipboard in a background thread to detect YouTube and Facebook URLs, allowing one-click addition to the download queue.
+- **Thread-Safe Download Queue**: Asynchronous processing queue with individual progress tracking, speed estimation, cancellation, and retry handling.
+- **Metadata and Cover Art Pipeline**: Cleanses noisy video titles (removing bracketed descriptors such as official video, lyric video, remastered) into structured Artist and Title metadata, embedding square JPEG artwork and ID3v2.3 tags.
+- **Bilingual Interface**: Instant switching between English and Vietnamese without restarting the application.
+- **Dual Operating Modes**: Full desktop GUI by default, or headless CLI for terminal environments and automated scripts.
 
-### 1. Build and Run via Cargo
+---
+
+## Supported Audio Formats
+
+All exported audio is standardized to 44.1 kHz, 16-bit stereo (CD standard) for universal hardware compatibility:
+
+| Format | Bitrate / Mode | Typical Target | Compatibility Notes |
+|---|---|---|---|
+| MP3 | 320 / 192 / 128 kbps | Car stereos, legacy players, mobile | Universal ID3v2.3 support; compatible with older automotive head units. |
+| M4A (AAC) | Source passthrough / AAC | Modern smartphones, Apple devices | Preserves source AAC streams without re-encoding quality loss. |
+| WAV | 1411 kbps uncompressed | Audio hardware, DAWs, legacy decks | Raw PCM audio. Universal decoding; does not support embedded cover art. |
+| FLAC | Bit-perfect lossless | Audiophile setups, modern receivers | Free Lossless Audio Codec; full tag and metadata retention. |
+
+---
+
+## Prerequisites
+
+- **FFmpeg**: Required for audio stream extraction, filtering, and format encoding. Must be available in system `PATH` or the working directory.
+- **yt-dlp**: Required for extracting media streams and metadata from supported platforms. Must be in system `PATH` or the working directory.
+- **Rust Toolchain** (1.80+): Only required when building from source code.
+
+---
+
+## Installation & Build
+
+### From Source
+
 ```bash
 # Clone the repository
 git clone https://github.com/Khanh1916/media-to-mp3.git
 cd media-to-mp3
 
-# Build optimized release binary
+# Build optimized production binary
 cargo build --release
 
-# Launch GUI
+# Run GUI
 cargo run --release
 ```
 
-### 2. Convenience Scripts
-- **Windows**: Double-click `run.bat` or run:
-  ```cmd
-  run.bat
-  ```
+### Quick Launch Scripts
+
+- **Windows**: Run `run.bat` (automatically builds release binary if missing and launches the GUI).
 - **Linux / macOS**:
   ```bash
   chmod +x run.sh
@@ -75,114 +77,134 @@ cargo run --release
 
 ---
 
-## 🎯 Usage
+## Usage
 
-### Graphical Interface (GUI)
-Simply launch `media-to-mp3` without arguments:
-- **Download Tab**: Paste one or multiple YouTube/Facebook links, choose the format pill (MP3 320k, 192k, 128k, M4A, FLAC, WAV), and click **Add to Queue**. Each item provides live status, progress bar, play button, and file explorer reveal.
-- **Audio Editor Tab**: Click **Open Audio File...** or hit **✂ Edit** on any completed download. Drag the start and end markers over the waveform, apply fade or gain, and click **Export Audio**.
-- **Header**: Change language instantly with the top-right toggle (`🇻🇳 Tiếng Việt` / `🇬🇧 English`).
+### Graphical Interface
 
-### Command Line Interface (CLI)
-Pass one or more video URLs to download immediately in headless mode:
+Launch `media-to-mp3` without arguments to open the desktop application:
+
+1. **Download Queue Tab**:
+   - Paste one or more video URLs into the input field.
+   - Select your target format pill (MP3 320k, 192k, 128k, M4A, FLAC, WAV).
+   - Click **Add to Queue**. Completed items display action buttons to open the enclosing directory, play the track in the default OS player, or send the file directly to the Audio Editor.
+
+2. **Audio Editor Tab**:
+   - Click **Open Audio File** or transfer a file from the download queue.
+   - Drag the start and end markers on the interactive waveform canvas to designate the active region.
+   - Configure optional processing: Fade In (seconds), Fade Out (seconds), Volume Gain (dB), and Loudness Normalization.
+   - Click **Export Audio** to choose the output destination.
+
+3. **Status Bar & Header**:
+   - Live indicators display the status of the local FFmpeg binary and background clipboard listener.
+   - Click the language selector in the upper right header to switch between English and Vietnamese.
+
+### Command-Line Interface
+
+Pass target URLs directly to the binary for headless batch processing:
 
 ```bash
-# Download video as 320kbps MP3 into default Music directory:
+# Download a track as 320 kbps MP3 into default Music directory:
 ./target/release/media-to-mp3 "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
-# Batch download multiple links:
+# Batch download multiple links sequentially:
 ./target/release/media-to-mp3 "https://youtu.be/LINK1" "https://youtu.be/LINK2"
 
-# Specify format (mp3, m4a, wav, flac) and bitrate (128, 192, 320):
+# Specify audio format and bitrate:
 ./target/release/media-to-mp3 "https://www.youtube.com/watch?v=..." -f flac
 ./target/release/media-to-mp3 "https://www.youtube.com/watch?v=..." -b 192
 
-# Custom destination folder:
+# Specify custom destination directory:
 ./target/release/media-to-mp3 "https://www.youtube.com/watch?v=..." -o "D:/Music"
 
-# Run automated offline self-check (FFmpeg codecs, filters, audio cutter):
+# Run offline self-diagnostic suite (verifies FFmpeg codecs and audio filters):
 ./target/release/media-to-mp3 --check
 
-# Background clipboard monitor mode:
+# Run headless background clipboard listener:
 ./target/release/media-to-mp3 --monitor
 ```
 
 ---
 
-## 🧪 Testing & Quality Assurance
+## Automated Verification
 
-Run the comprehensive test suite (23 automated unit and integration tests covering audio processing, configuration persistence, download queues, and title cleansing):
+The test suite consists of 23 automated unit and integration tests covering audio concatenation, timecode parsing, configuration lifecycle, download queue synchronization, and title parsing:
 
 ```bash
-# Run unit & integration tests
-cargo test
+# Run full unit and integration test suite
+cargo test --all-targets
 
-# Strict linter check
-cargo clippy -- -D warnings
+# Run strict linter check
+cargo clippy --all-targets -- -D warnings
 
-# Format verification
+# Verify source formatting
 cargo fmt -- --check
 ```
 
 ---
 
-## 🤖 Multi-Platform AI Agent Guides
+## Multi-Platform AI Agent Instructions
 
-This repository includes native instructions and context files for all major AI coding agents:
+This repository provides standardized context and instruction files for autonomous coding agents:
 
-- **[AGENTS.md](AGENTS.md)**: Universal Agent Specification (for Codex, Devin, Copilot, Gemini)
-- **[CLAUDE.md](CLAUDE.md)**: Anthropic Claude Code developer guide
-- **[.cursorrules](.cursorrules)**: Cursor AI IDE configuration rules
-- **[.github/copilot-instructions.md](.github/copilot-instructions.md)**: GitHub Copilot Workspace instructions
-- **[.gemini/GEMINI.md](.gemini/GEMINI.md)**: Gemini CLI & Antigravity configuration guide
+- **[AGENTS.md](AGENTS.md)**: Universal agent guide covering architecture, threading discipline, and code style.
+- **[CLAUDE.md](CLAUDE.md)**: Development guidelines and command references for Anthropic Claude Code.
+- **[.cursorrules](.cursorrules)**: Coding standards for Cursor AI IDE.
+- **[.github/copilot-instructions.md](.github/copilot-instructions.md)**: Instructions for GitHub Copilot Workspace.
+- **[.gemini/GEMINI.md](.gemini/GEMINI.md)**: Agent instructions for Gemini CLI and Google Antigravity.
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 media-to-mp3/
-├── .github/              # GitHub Actions CI/CD & Community Health
-│   ├── workflows/        # Automated CI & Multi-platform Release workflows
-│   ├── ISSUE_TEMPLATE/   # Bug report and feature request templates
+├── .github/
+│   ├── workflows/
+│   │   ├── ci.yml               # Automated CI for Linux, Windows, and macOS
+│   │   └── release.yml          # Automated multi-platform release builder
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.md
+│   │   ├── feature_request.md
+│   │   └── config.yml
 │   ├── PULL_REQUEST_TEMPLATE.md
 │   ├── copilot-instructions.md
-│   └── dependabot.yml    # Weekly dependency updates
-├── Cargo.toml            # Package manifest, dependencies, release optimizations
-├── Cargo.lock            # Exact reproducible dependency tree
-├── rustfmt.toml          # Rust code formatting rules
-├── clippy.toml           # Clippy linter settings
-├── AGENTS.md             # Universal AI Agent Specification
-├── CLAUDE.md             # Claude Code development guidelines
-├── .cursorrules          # Cursor AI IDE instructions
-├── CONTRIBUTING.md       # Contributing guidelines
-├── CODE_OF_CONDUCT.md   # Contributor Covenant 2.1
-├── SECURITY.md           # Security vulnerability reporting policy
-├── CHANGELOG.md          # Version changelog
-├── run.bat               # Windows instant launcher & auto-builder
-├── run.sh                # Linux / macOS launcher script
-├── src/                  # Pure Rust codebase
-│   ├── main.rs           # Application entry point (GUI dispatcher & CLI)
-│   ├── lib.rs            # Core library root
-│   ├── gui.rs            # Native eframe/egui GUI with audio waveform canvas
-│   ├── audio.rs          # FFmpeg audio pipeline (cut, join, filters, peaks)
-│   ├── downloader.rs     # yt-dlp wrapper, stream extraction & metadata cleaner
-│   ├── queue.rs          # Thread-safe download queue manager
-│   ├── clipboard.rs      # Cross-platform clipboard listener
-│   ├── config.rs         # Safe atomic JSON configuration storage
-│   ├── i18n.rs           # Bilingual translation loader (embedded JSON)
-│   ├── platform.rs       # Native OS shell explorer & audio playback
-│   ├── selftest.rs       # Comprehensive offline self-diagnostic engine
-│   ├── version.rs        # Application version definition
-│   └── strings.json      # English & Vietnamese translation strings
+│   └── dependabot.yml
+├── Cargo.toml                   # Crate manifest and release profile configurations
+├── Cargo.lock
+├── rustfmt.toml                 # Code formatting rules
+├── clippy.toml                  # Linter MSRV settings
+├── AGENTS.md                    # Universal AI agent instructions
+├── CLAUDE.md                    # Claude Code instructions
+├── .cursorrules                 # Cursor rules
+├── CONTRIBUTING.md              # Contributor guidelines
+├── CODE_OF_CONDUCT.md          # Contributor Covenant 2.1
+├── SECURITY.md                  # Vulnerability disclosure policy
+├── CHANGELOG.md                 # Semantic version history
+├── run.bat                      # Windows launcher and auto-builder
+├── run.sh                       # Linux and macOS launcher script
+├── src/
+│   ├── main.rs                  # Application entry point and CLI dispatcher
+│   ├── lib.rs                   # Library root
+│   ├── gui.rs                   # eframe/egui GUI and waveform painter
+│   ├── audio.rs                 # FFmpeg process integration and filter pipeline
+│   ├── downloader.rs            # yt-dlp wrapper and title cleansing regexes
+│   ├── queue.rs                 # Thread-safe download queue
+│   ├── clipboard.rs             # Cross-platform clipboard listener
+│   ├── config.rs                # Safe atomic JSON settings persistence
+│   ├── i18n.rs                  # Bilingual localization loader
+│   ├── platform.rs              # OS file explorer and audio preview integration
+│   ├── selftest.rs              # Offline diagnostic test runner
+│   ├── version.rs               # Version constant
+│   └── strings.json             # English and Vietnamese dictionary
 ├── tests/
-│   └── test_rust_suite.rs # Integration and regression tests
-├── LICENSE               # MIT License
-└── README.md             # Project documentation
+│   └── test_rust_suite.rs        # Integration test suite
+├── LICENSE                      # MIT License
+├── README.md                    # English documentation
+└── README_VI.md                 # Vietnamese documentation
 ```
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the [MIT License](LICENSE).

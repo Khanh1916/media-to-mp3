@@ -13,10 +13,12 @@ fn test_config_lifecycle() {
     assert_eq!(load_settings(Some(&path)), Settings::default());
 
     // Save and reload
-    let mut custom = Settings::default();
-    custom.format = "flac".to_string();
-    custom.bitrate = "192".to_string();
-    custom.language = "en".to_string();
+    let custom = Settings {
+        format: "flac".to_string(),
+        bitrate: "192".to_string(),
+        language: "en".to_string(),
+        ..Default::default()
+    };
     save_settings(&custom, Some(&path)).unwrap();
 
     let loaded = load_settings(Some(&path));
@@ -105,7 +107,7 @@ fn test_audio_crossfade_and_duration() {
     assert!(xf > 0.0 && xf <= 2.0);
 
     let dur = audio::output_duration(&clips, 2.0);
-    assert!(dur < 15.0 && dur >= 13.0);
+    assert!((13.0..15.0).contains(&dur));
 }
 
 #[test]

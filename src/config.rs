@@ -159,10 +159,12 @@ mod tests {
     fn test_round_trip() {
         let tmp = tempfile::tempdir().unwrap();
         let path = tmp.path().join("sub").join("settings.json");
-        let mut settings = Settings::default();
-        settings.format = "flac".to_string();
-        settings.language = "en".to_string();
-        settings.embed_thumbnail = false;
+        let settings = Settings {
+            format: "flac".to_string(),
+            language: "en".to_string(),
+            embed_thumbnail: false,
+            ..Default::default()
+        };
 
         save_settings(&settings, Some(&path)).unwrap();
         assert_eq!(load_settings(Some(&path)), settings);

@@ -238,9 +238,8 @@ pub fn build_export_command(
         return Err(format!("unsupported format {}", fmt));
     }
     let ffmpeg = get_ffmpeg_path()
-        .ok_or_else(|| "FFmpeg not found".to_string())?
-        .to_string_lossy()
-        .to_string();
+        .map(|p| p.to_string_lossy().to_string())
+        .unwrap_or_else(|| "ffmpeg".to_string());
 
     let mut cmd = vec![ffmpeg, "-hide_banner".to_string(), "-y".to_string()];
 
