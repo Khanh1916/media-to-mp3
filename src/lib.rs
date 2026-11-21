@@ -2,6 +2,7 @@ pub mod audio;
 pub mod clipboard;
 pub mod config;
 pub mod downloader;
+pub mod gui;
 pub mod i18n;
 pub mod platform;
 pub mod queue;

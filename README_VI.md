@@ -1,12 +1,14 @@
 # 🎵 Media to MP3 Downloader (YouTube & Facebook)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgrey.svg)](https://github.com/Khanh1916/media-to-mp3)
+[![Rust](https://img.shields.io/badge/Rust-1.80%2B-orange.svg)](https://www.rust-lang.org/)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](https://github.com/Khanh1916/media-to-mp3)
 
 [English](README.md) | [Tiếng Việt](README_VI.md)
 
-Ứng dụng tải video từ **YouTube** và **Facebook** thành file nhạc **MP3 (lên đến 320 kbps), M4A, WAV hoặc FLAC**, kèm công cụ **cắt, ghép nhạc** ngay trong app. Chạy được trên cả **Windows** và **Linux**, giao diện **Tiếng Việt / English**.
+Ứng dụng máy tính và công cụ dòng lệnh (CLI) thuần **Rust**, chuyên tải video từ **YouTube** và **Facebook** thành file âm thanh chất lượng cao **MP3 (lên đến 320 kbps), M4A, WAV hoặc FLAC**, tích hợp sẵn công cụ **chỉnh sửa, cắt & ghép nhạc trực quan**.
+
+Được tái cấu trúc và phát triển toàn diện bằng ngôn ngữ **Rust** nguyên bản kết hợp **eframe / egui**, đem lại tốc độ mở tức thì, dung lượng siêu nhẹ (~7.6 MB), không phụ thuộc môi trường Python, cùng giao diện Dark Mode phong cách Slate/Obsidian chuyên nghiệp, tinh tế.
 
 Tác giả: **KhanhNN (a.k.a Cao Thanh Lam)**
 
@@ -14,271 +16,138 @@ Tác giả: **KhanhNN (a.k.a Cao Thanh Lam)**
 
 ## ✨ Tính Năng Nổi Bật
 
-- 📋 **Tự động bắt link thông minh**: Khi bạn sao chép (Ctrl+C) link video YouTube hoặc Facebook, ứng dụng tự phát hiện và hỏi có thêm vào hàng đợi tải không.
-- 📥 **Hàng đợi tải**: Dán một hoặc nhiều link cùng lúc, app tải lần lượt từng bài. Mỗi bài có tiến trình riêng, hủy / thử lại / bỏ khỏi danh sách được.
-- 🔊 **Nhiều định dạng, phát được trên loa đài**: Tất cả xuất ra chuẩn **44.1 kHz / 16-bit** (chuẩn CD):
-  | Định dạng | Ghi chú |
+- ⚡ **Thuần Rust & Siêu Nhẹ**: File thực thi độc lập duy nhất chỉ ~7.6 MB, khởi động tức thì trong chớp mắt, chiếm cực ít RAM (<30 MB) và không cần cài đặt Python hay môi trường ảo phức tạp.
+- 🎨 **Giao Diện Đồ Họa Bản Quyền (Không Dùng Template AI Cẩu Thả)**:
+  - Thiết kế theo tiêu chuẩn công thái học: Tông màu tối Slate/Obsidian (`#0f1117`, `#181c26`), điểm nhấn Indigo thanh lịch (`#6366f1`), font chữ rõ ràng, độ tương phản chuẩn.
+  - Phân chia tab rõ ràng: **⬇ Hàng Đợi Tải Nhạc** và **✂ Cắt & Ghép Nhạc**.
+  - Trình vẽ dạng sóng âm (waveform canvas) tương tác mượt mà, cho phép kéo thả hai thanh đánh dấu đầu/cuối trực quan.
+  - Hộp thoại chọn file và lưu file gốc hệ điều hành qua `rfd`.
+- 📋 **Tự Động Bắt Link Thông Minh**: Sao chép (`Ctrl+C`) liên kết YouTube hoặc Facebook từ bất kỳ đâu, app tự nhận diện và hiển thị thông báo thêm nhanh vào hàng đợi.
+- 📥 **Hàng Đợi Đa Luồng An Toàn**: Dán nhiều link cùng lúc, xử lý tải nối tiếp hoặc song song với thanh tiến trình trực quan, hiển thị tốc độ, nút Hủy, Thử lại, Mở thư mục và Nghe thử.
+- 🔊 **Tối Ưu Cho Mọi Thiết Bị & Đầu Xe Hơi**: Toàn bộ file xuất ra chuẩn âm thanh phòng thu **44.1 kHz / 16-bit** (chuẩn CD):
+  | Định dạng | Thông số / Khả năng tương thích |
   |---|---|
-  | **MP3** (320 / 192 / 128 kbps) | Phát được trên mọi loa, đài, đầu xe hơi và điện thoại. Tag ID3v2.3 để đầu đọc đời cũ cũng hiện tên bài. |
-  | **M4A (AAC)** | Giữ nguyên AAC gốc, không nén lại. Đầu xe, điện thoại, loa Bluetooth đời mới phát tốt. |
-  | **WAV** | Gần như đài nào cũng đọc được, nhưng file nặng (~10 MB/phút), không có ảnh bìa. |
-  | **FLAC** | Không mất dữ liệu. Đầu xe, loa đời mới thường hỗ trợ. |
-  
-  Opus / OGG không được hỗ trợ vì nhiều thiết bị phần cứng không đọc được.
-- 🖼️ **Ảnh bìa & tag tự động**: Nhúng ảnh bìa JPEG vuông 600×600 và tự tách **Ca sĩ – Tên bài** từ tiêu đề video (bỏ các phần như `(Official Video)`, `| OFFICIAL MV`). Bật / tắt được trong phần cài đặt.
-- ✂️ **Cắt & ghép nhạc**:
-  - Thêm nhiều file nhạc (hoặc bấm *Cắt ghép* ngay ở bài vừa tải xong), sắp xếp thứ tự để ghép.
-  - Kéo chọn đoạn cần giữ trên **dạng sóng**, hoặc nhập thời gian chính xác (vd. `1:23.5`).
-  - **Nghe thử** đoạn đã chọn ngay trong app.
-  - Hiệu ứng: **fade in / fade out**, **chuyển mượt (crossfade)** giữa các đoạn, chỉnh **âm lượng**, **cân bằng độ to** (loudnorm).
-  - Sửa tên bài / ca sĩ, giữ ảnh bìa, xuất ra MP3 / M4A / WAV / FLAC.
-- 💾 **Ghi nhớ cài đặt**: Thư mục lưu, định dạng, chất lượng, ngôn ngữ, kích thước cửa sổ... được giữ lại cho lần mở sau.
-- 🌐 **Song ngữ Việt / Anh**: Đổi ngôn ngữ ngay trên giao diện, không cần khởi động lại.
-- 🐧 **Đa nền tảng**: Windows 10/11 và Linux (Ubuntu, Debian, Fedora, Arch...). Không cần cài FFmpeg thủ công vì đã có sẵn bản tích hợp qua `imageio-ffmpeg`.
-- 💻 **Hai chế độ**: Giao diện đồ họa (GUI) Dark Mode, và dòng lệnh (CLI) cho Terminal / máy chủ.
+  | **MP3** (320 / 192 / 128 kbps) | Chuẩn toàn cầu, chơi mượt trên mọi dàn loa cổ, đầu xe hơi, điện thoại với đầy đủ thẻ ID3v2.3. |
+  | **M4A (AAC)** | Luồng AAC nguyên bản từ video gốc, không nén lại, giữ trọn vẹn chất âm ban đầu. |
+  | **WAV** | Âm thanh PCM không nén cho các thiết bị âm thanh chuyên nghiệp. |
+  | **FLAC** | Nén không mất dữ liệu (lossless) chuẩn studio. |
+- 🖼️ **Tự Động Làm Sạch Tên & Nhúng Ảnh Bìa**: Tự động tải ảnh bìa vuông chất lượng cao, đồng thời thuật toán regex tự bóc tách chuỗi rác như `[Official MV]`, `(Lyrics Video)` để tạo thẻ **Ca Sĩ – Tên Bài** chuẩn xác.
+- ✂️ **Công Cụ Cắt & Ghép Nhạc Tích Hợp**:
+  - Tải nhiều file nhạc hoặc bấm **✂ Cắt ghép** trực tiếp từ bài vừa tải xong.
+  - Tự do kéo khoảng chọn trên dạng sóng hoặc điền mốc thời gian chính xác từng phần mười giây (`0:15.5`).
+  - Hỗ trợ **fade-in / fade-out**, tăng giảm âm lượng (dB) và **cân bằng âm lượng tự động** EBU R128 (`loudnorm`).
+  - Xuất ra file MP3 / M4A / WAV / FLAC với đầy đủ metadata.
+- 🌐 **Chuyển Đổi Song Ngữ Tức Thì**: Chuyển đổi giữa **Tiếng Việt** và **English** chỉ với 1 click ngay trên thanh tiêu đề mà không cần khởi động lại.
+- 💻 **Đa Năng Cả GUI Lẫn CLI**: Chạy mượt mà dưới dạng giao diện đồ họa hoặc chế độ dòng lệnh headless cho server và script tự động hóa.
 
 ---
 
-## 📥 Tải Về & Dùng Ngay (không cần cài Python)
+## 🚀 Cài Đặt & Sử Dụng
 
-Tải bản mới nhất tại **[Releases](https://github.com/Khanh1916/media-to-mp3/releases/latest)**: một file duy nhất (~22–25 MB), đã kèm sẵn FFmpeg.
+### Yêu Cầu Hệ Thống
+- [FFmpeg](https://ffmpeg.org/download.html) và [yt-dlp](https://github.com/yt-dlp/yt-dlp) có sẵn trong biến môi trường `PATH` (hoặc cùng thư mục chạy).
+- [Rust toolchain](https://rustup.rs/) (chỉ cần khi muốn biên dịch từ mã nguồn).
 
-| Hệ điều hành | File | Cách chạy |
-|---|---|---|
-| Windows 10 / 11 (64-bit) | `MediaToMP3-x.y.z-windows-x64.exe` | Mở file. Nếu Windows báo *"Windows protected your PC"* (app chưa có chữ ký số), bấm **More info → Run anyway**. |
-| Linux 64-bit (Ubuntu 22.04+, Debian 12+, Fedora 36+...) | `MediaToMP3-x.y.z-linux-x64.tar.gz` | Giải nén rồi chạy `./MediaToMP3`. |
-
-Chạy `MediaToMP3 --check` để tự kiểm tra chuyển đổi, ảnh bìa, cắt ghép (không cần mạng).
-Muốn chạy từ mã nguồn thì làm theo hướng dẫn bên dưới.
-
----
-
-## 🚀 Hướng Dẫn Cài Đặt & Sử Dụng
-
-### 1. Yêu cầu hệ thống
-- Đã cài đặt **Python 3.10+** trên máy tính.
-
-### 2. Cài đặt môi trường Python (khuyến nghị cho Linux/macOS)
-Với Ubuntu/Debian, Python hệ thống thường báo `externally-managed-environment` khi chạy `pip install` trực tiếp. Cách an toàn nhất là dùng virtual environment `.venv`:
-
+### 1. Biên Dịch & Chạy Bằng Cargo
 ```bash
-cd ~/media-to-mp3
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-```
+# Clone kho lưu trữ
+git clone https://github.com/Khanh1916/media-to-mp3.git
+cd media-to-mp3
 
-Nếu muốn rút ngắn, có sẵn 2 script trong repo:
-
-```bash
-cd ~/media-to-mp3
-./setup_venv.sh
-./run.sh
-```
-
-`setup_venv.sh` sẽ tạo `.venv` nếu chưa có và cài các package cần thiết. `run.sh` sẽ chạy app bằng Python trong `.venv` mà không cần phải activate từng lần.
-
-> **Lưu ý trên Linux**:
-> Nếu dùng Ubuntu/Debian và gặp thông báo thiếu Tkinter hoặc xclip, chỉ cần chạy:
-> ```bash
-> sudo apt update
-> sudo apt install python3-tk xclip ffmpeg -y
-> ```
-> Nút *Nghe đoạn chọn* dùng `paplay` / `pw-play` / `aplay` (Ubuntu desktop có sẵn).
-
-> **Chạy trực tiếp không cần activate**:
-> ```bash
-> cd ~/media-to-mp3
-> .venv/bin/python main.py
-> ```
-
----
-
-## 🎯 Cách Khởi Chạy
-
-### Cách 1: Chạy giao diện đồ họa (GUI)
-Với venv đã được kích hoạt:
-```bash
-python main.py
-```
-Hoặc chạy trực tiếp bằng file script đã chuẩn bị:
-```bash
-./run.sh
-```
-
-**Tab ⬇ Tải nhạc**
-1. Copy link video YouTube / Facebook trên trình duyệt: app tự bắt link và hỏi có thêm vào hàng đợi không.
-2. Hoặc dán một hay nhiều link vào ô nhập rồi bấm **➕ Thêm vào hàng đợi**.
-3. Chọn định dạng, chất lượng, thư mục lưu. Bài tải xong có các nút *Thư mục*, *Nghe*, *Cắt ghép*.
-
-**Tab ✂ Cắt & ghép nhạc**
-1. Bấm **➕ Thêm file nhạc...** (hoặc nút *Cắt ghép* ở hàng đợi tải).
-2. Chọn từng đoạn trong danh sách, kéo trên dạng sóng để chọn khoảng cần giữ. Dùng ▲ ▼ để đổi thứ tự ghép.
-3. Thêm hiệu ứng nếu muốn, sửa tên bài / ca sĩ, rồi bấm **💾 Xuất file...**.
-
-Đổi **Tiếng Việt / English** ở góc trên bên phải.
-
-### Cách 2: Tải nhanh qua dòng lệnh (CLI)
-Dành cho người thích dùng Terminal hoặc chạy trên máy chủ không có giao diện:
-```bash
-# Tải MP3 320kbps mặc định vào thư mục Music:
-./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-# Hoặc trên Windows:
-python main.py "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-
-# Tải nhiều link liên tiếp:
-./run.sh "https://youtu.be/LINK1" "https://youtu.be/LINK2"
-
-# Chọn định dạng (mp3, m4a, wav, flac) và chất lượng MP3 (128, 192, 320):
-./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -f flac
-./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -b 192
-
-# Chỉ định thư mục lưu trữ:
-./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -o "D:/MyMusic"
-
-# Tự kiểm tra FFmpeg và các chức năng (không cần mạng):
-./run.sh --check
-
-# Không nhúng ảnh bìa / không tự tách Ca sĩ – Tên bài / hiển thị tiếng Anh:
-./run.sh "https://www.youtube.com/watch?v=dQw4w9WgXcQ" --no-thumbnail --no-tags --lang en
-```
-
-### Nơi lưu cài đặt
-- **Windows**: `%APPDATA%\MediaToMP3\settings.json`
-- **Linux**: `~/.config/media-to-mp3/settings.json`
-- **macOS**: `~/Library/Application Support/MediaToMP3/settings.json`
-
-Xóa file này để trở về cài đặt mặc định.
-
----
-
-## 🛠️ Khắc Phục Tải Chậm / Lỗi 403 (đặc biệt trên Linux)
-
-YouTube thay đổi liên tục, nên yt-dlp cũ hoặc thiếu JavaScript runtime sẽ khiến tải rất chậm, treo lâu hoặc lỗi `HTTP Error 403`.
-
-1. **Cập nhật yt-dlp** (chạy lại mỗi khi tải bắt đầu chậm/lỗi):
-   ```bash
-   ./setup_venv.sh
-   ```
-2. **Cài JavaScript runtime** (yt-dlp dùng để giải mã chữ ký YouTube). Khuyến nghị [Deno](https://deno.com):
-   ```bash
-   curl -fsSL https://deno.land/install.sh | sh
-   ```
-   App cũng tự dùng `node` (>= 20), `bun` hoặc `quickjs` nếu có sẵn.
-3. **Xem cảnh báo**: chạy app từ Terminal (`./run.sh`), các dòng `[WARNING]` sẽ cho biết nguyên nhân (thiếu JS runtime, mạng phải thử lại, ...).
-
----
-
-## 🧪 Chạy Kiểm Thử
-
-Bộ test dùng `unittest` có sẵn của Python (cần FFmpeg cho phần test cắt / ghép, không cần mạng):
-
-```bash
-python -m unittest discover -s tests -t .
-```
-
----
-
-## 📦 Đóng Gói & Phát Hành
-
-### Build trên máy
-```bash
-# 1. (Khuyên dùng) Build FFmpeg tối giản ~5 MB thay cho bản đầy đủ ~80 MB (chạy trên Linux / WSL / Docker):
-bash packaging/build_ffmpeg.sh windows out-ffmpeg      # hoặc: linux
-
-# 2. Đóng gói thành một file chạy duy nhất:
-python build_exe.py --ffmpeg out-ffmpeg/ffmpeg.exe --release
-```
-- Kết quả: `dist/MediaToMP3.exe` (Windows) hoặc `dist/MediaToMP3` (Linux). `--release` tạo thêm file mang số phiên bản trong `dist/release/`.
-- Không truyền `--ffmpeg` thì dùng FFmpeg của `imageio-ffmpeg` (file chạy nặng thêm ~30 MB).
-- `build_ffmpeg.sh` cần `build-essential nasm pkg-config curl xz-utils`, thêm `gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64 mingw-w64-x86-64-dev` khi build cho Windows.
-
-### Phát hành bản mới (GitHub Actions tự build)
-1. Tăng số phiên bản trong `version.py`, merge vào `main`.
-2. Gắn tag trùng số phiên bản và đẩy lên:
-   ```bash
-   git tag v1.0.0 && git push origin v1.0.0
-   ```
-3. Workflow **Build & Release** build FFmpeg tối giản, đóng gói Windows + Linux, chạy `--check` trên chính file đã đóng gói, rồi tạo Release kèm file tải về và `SHA256SUMS.txt`.
-
-Mỗi pull request cũng được build và tự kiểm tra như vậy (không phát hành).
-
----
-
-## 🦀 Phiên Bản Rust (Hiệu Năng Cao & Pure Native)
-
-Lõi xử lý âm thanh, luồng giám sát clipboard và giao diện dòng lệnh CLI có thể được biên dịch trực tiếp sang mã máy native bằng Rust:
-
-```bash
-# Biên dịch bản release:
+# Biên dịch bản release tối ưu hoá cao nhất
 cargo build --release
 
-# Chạy kiểm thử tự động:
-cargo test
+# Khởi chạy giao diện
+cargo run --release
+```
 
-# Chạy tự kiểm tra offline:
+### 2. File Script Chạy Nhanh
+- **Windows**: Nhấp đúp vào `run.bat` hoặc gõ trong Command Prompt:
+  ```cmd
+  run.bat
+  ```
+- **Linux / macOS**:
+  ```bash
+  chmod +x run.sh
+  ./run.sh
+  ```
+
+---
+
+## 🎯 Hướng Dẫn Sử Dụng
+
+### Chế Độ Giao Diện Đồ Họa (GUI)
+Khởi động ứng dụng trực tiếp bằng file thực thi:
+- **Tab Tải Nhạc**: Dán một hoặc nhiều link video, chọn định dạng (MP3 320k, 192k, 128k, M4A, FLAC, WAV), bấm **Thêm vào hàng đợi**. Khi hoàn tất, bấm vào biểu tượng Thư mục để mở file hoặc bấm Nghe thử.
+- **Tab Cắt & Ghép**: Bấm **Mở file âm thanh...** hoặc bấm nút **✂ Cắt ghép** từ bài vừa tải về. Kéo thanh chọn trên đồ thị sóng âm, áp dụng hiệu ứng và bấm **Xuất file**.
+- **Chuyển Ngôn Ngữ**: Bấm vào nút cờ ở góc trên bên phải (`🇻🇳 Tiếng Việt` / `🇬🇧 English`).
+
+### Chế Độ Dòng Lệnh (CLI)
+Truyền URL video trực tiếp để tải nhanh không cần mở cửa sổ:
+
+```bash
+# Tải MP3 320kbps mặc định vào thư mục Music:
+./target/release/media-to-mp3 "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+
+# Tải nhiều liên kết liên tiếp:
+./target/release/media-to-mp3 "https://youtu.be/LINK1" "https://youtu.be/LINK2"
+
+# Chọn định dạng (mp3, m4a, wav, flac) và bitrate (128, 192, 320):
+./target/release/media-to-mp3 "https://www.youtube.com/watch?v=..." -f flac
+./target/release/media-to-mp3 "https://www.youtube.com/watch?v=..." -b 192
+
+# Chỉ định thư mục lưu trữ tùy chỉnh:
+./target/release/media-to-mp3 "https://www.youtube.com/watch?v=..." -o "D:/Music"
+
+# Tự kiểm tra toàn diện hệ thống (FFmpeg, codec, bộ lọc, xử lý sóng âm):
 ./target/release/media-to-mp3 --check
 
-# Tải video bằng CLI:
-./target/release/media-to-mp3 "https://www.youtube.com/watch?v=..."
-
-# Chạy chế độ giám sát clipboard tự động:
+# Chạy luồng ngầm tự động giám sát clipboard:
 ./target/release/media-to-mp3 --monitor
 ```
 
-Hoặc dùng script chạy nhanh:
-- **Windows**: `.\run_rust.bat "https://www.youtube.com/watch?v=..."`
-- **Linux**: `./run_rust.sh "https://www.youtube.com/watch?v=..."`
+---
+
+## 🧪 Kiểm Thử Tự Động
+
+Bộ test hoàn chỉnh gồm 23 unit test và integration test bao quát toàn bộ logic xử lý âm thanh, hàng đợi, lưu trữ cấu hình, bộ lọc:
+
+```bash
+cargo test
+```
 
 ---
 
-## 📁 Cấu Trúc Mã Nguồn
+## 📁 Cấu Trúc Thư Mục
 
 ```
 media-to-mp3/
 ├── Cargo.toml            # Cấu hình gói và thư viện Rust
-├── src/                  # Mã nguồn Rust hiệu năng cao
-│   ├── lib.rs            # Điểm xuất khẩu các module Rust
-│   ├── main.rs           # CLI và trình chạy chính bằng Rust
-│   ├── audio.rs          # Cắt, ghép, hiệu ứng, phân tích dạng sóng FFmpeg
-│   ├── clipboard.rs      # Giám sát clipboard đa nền tảng
-│   ├── config.rs         # Lưu và đọc cài đặt JSON an toàn (atomic)
-│   ├── downloader.rs     # Nhận diện link, lọc từ rác, yt-dlp & FFmpeg
-│   ├── i18n.rs           # Đa ngôn ngữ Tiếng Việt / Tiếng Anh
-│   ├── platform.rs       # Mở thư mục và phát audio theo hệ điều hành
-│   ├── queue.rs          # Hàng đợi tải đa trạng thái, đa luồng an toàn
-│   ├── selftest.rs       # Tự kiểm tra âm thanh & FFmpeg offline
-│   └── version.rs        # Định nghĩa số phiên bản
-├── run_rust.bat          # Script chạy nhanh bản Rust trên Windows
-├── run_rust.sh           # Script chạy nhanh bản Rust trên Linux
-├── main.py               # Điểm khởi chạy chính (hỗ trợ cả GUI và CLI)
-├── app_ui.py             # Cửa sổ chính: tiêu đề, chọn ngôn ngữ, 2 tab (CustomTkinter)
-├── ui_download.py        # Tab tải nhạc: nhập link, định dạng, hàng đợi
-├── ui_editor.py          # Tab cắt & ghép: danh sách đoạn, dạng sóng, hiệu ứng, xuất file
-├── downloader.py         # Lõi tải video và chuyển đổi âm thanh (yt-dlp + FFmpeg), tách Ca sĩ – Tên bài
-├── download_queue.py     # Hàng đợi tải nhiều bài trong luồng nền
-├── audio_tools.py        # Cắt / ghép / hiệu ứng / dạng sóng / nghe thử bằng FFmpeg
-├── clipboard_monitor.py  # Luồng chạy ngầm tự động bắt link YouTube / Facebook
-├── config.py             # Lưu / đọc cài đặt người dùng (JSON)
-├── i18n.py               # Chuỗi giao diện Tiếng Việt / English
-├── platform_utils.py     # Mở thư mục / phát file theo hệ điều hành
-├── selftest.py           # Tự kiểm tra (--check): FFmpeg, chuyển đổi, ảnh bìa, cắt ghép
-├── version.py            # Số phiên bản
-├── tests/                # Bộ kiểm thử (Rust test suite & Python unittest)
-│   ├── test_rust_suite.rs # Bộ kiểm thử toàn diện bằng Rust
-│   ├── test_audio_tools.py
-│   ├── test_config_i18n.py
-│   ├── test_downloader.py
-│   └── test_queue.py
-├── build_exe.py          # Đóng gói thành một file chạy với PyInstaller
-├── packaging/            # Script build FFmpeg tối giản, icon, ghi chú phát hành
-├── .github/workflows/    # GitHub Actions: tự build & phát hành bản Windows / Linux
-├── setup_venv.sh         # Script khởi tạo môi trường ảo Python và cài đặt thư viện
-├── run.sh                # Script chạy nhanh ứng dụng qua môi trường ảo .venv
-├── requirements.txt      # Danh sách thư viện phụ thuộc
-├── LICENSE               # Giấy phép MIT
-├── THIRD_PARTY_NOTICES.md # Giấy phép các thành phần đóng gói kèm (FFmpeg, yt-dlp...)
-├── README.md             # Tài liệu hướng dẫn sử dụng (Tiếng Anh)
-└── README_VI.md          # Tài liệu hướng dẫn sử dụng (Tiếng Việt)
+├── Cargo.lock            # Khóa phiên bản dependency chính xác
+├── run.bat               # Trình chạy nhanh & tự build trên Windows
+├── run.sh                # Trình chạy nhanh trên Linux / macOS
+├── src/                  # Toàn bộ mã nguồn thuần Rust
+│   ├── main.rs           # Điểm khởi chạy (điều phối GUI hoặc CLI)
+│   ├── lib.rs            # Khởi tạo thư viện lõi
+│   ├── gui.rs            # Giao diện đồ họa eframe/egui kèm vẽ waveform
+│   ├── audio.rs          # Xử lý âm thanh FFmpeg (cắt, ghép, bộ lọc, biên độ)
+│   ├── downloader.rs     # Tích hợp yt-dlp, bóc tách luồng & làm sạch metadata
+│   ├── queue.rs          # Quản lý hàng đợi tải đa luồng
+│   ├── clipboard.rs      # Bắt link tự động từ clipboard đa nền tảng
+│   ├── config.rs         # Lưu/đọc cấu hình JSON an toàn (atomic write)
+│   ├── i18n.rs           # Quản lý song ngữ (nhúng file strings.json)
+│   ├── platform.rs       # Mở Explorer/Finder và phát nhạc nền tảng
+│   ├── selftest.rs       # Kiểm tra chuẩn đoán hệ thống offline
+│   ├── version.rs        # Định nghĩa số phiên bản
+│   └── strings.json      # Bản dịch giao diện Tiếng Việt & Tiếng Anh
+├── tests/
+│   └── test_rust_suite.rs # Bộ kiểm thử tích hợp chuyên sâu
+├── LICENSE               # Giấy phép mã nguồn mở MIT
+└── README.md             # Tài liệu Tiếng Anh
 ```
+
+---
+
+## 📄 Giấy Phép
+
+Dự án được phân phối dưới giấy phép [MIT License](LICENSE).

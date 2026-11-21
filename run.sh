@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cd "$(dirname "$0")"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BIN="$SCRIPT_DIR/target/release/media-to-mp3"
 
-if [ ! -d ".venv" ]; then
-  echo "[run] .venv not found. Please run: ./setup_venv.sh"
-  exit 1
+if [ ! -f "$BIN" ]; then
+    echo "[media-to-mp3] Building release binary..."
+    (cd "$SCRIPT_DIR" && cargo build --release)
 fi
 
-./.venv/bin/python main.py "$@"
+exec "$BIN" "$@"
