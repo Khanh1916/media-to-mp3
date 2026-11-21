@@ -206,32 +206,79 @@ Mỗi pull request cũng được build và tự kiểm tra như vậy (không p
 
 ---
 
+## 🦀 Phiên Bản Rust (Hiệu Năng Cao & Pure Native)
+
+Lõi xử lý âm thanh, luồng giám sát clipboard và giao diện dòng lệnh CLI có thể được biên dịch trực tiếp sang mã máy native bằng Rust:
+
+```bash
+# Biên dịch bản release:
+cargo build --release
+
+# Chạy kiểm thử tự động:
+cargo test
+
+# Chạy tự kiểm tra offline:
+./target/release/media-to-mp3 --check
+
+# Tải video bằng CLI:
+./target/release/media-to-mp3 "https://www.youtube.com/watch?v=..."
+
+# Chạy chế độ giám sát clipboard tự động:
+./target/release/media-to-mp3 --monitor
+```
+
+Hoặc dùng script chạy nhanh:
+- **Windows**: `.\run_rust.bat "https://www.youtube.com/watch?v=..."`
+- **Linux**: `./run_rust.sh "https://www.youtube.com/watch?v=..."`
+
+---
+
 ## 📁 Cấu Trúc Mã Nguồn
 
 ```
 media-to-mp3/
-├── main.py              # Điểm khởi chạy chính (hỗ trợ cả GUI và CLI)
-├── app_ui.py            # Cửa sổ chính: tiêu đề, chọn ngôn ngữ, 2 tab (CustomTkinter)
-├── ui_download.py       # Tab tải nhạc: nhập link, định dạng, hàng đợi
-├── ui_editor.py         # Tab cắt & ghép: danh sách đoạn, dạng sóng, hiệu ứng, xuất file
-├── downloader.py        # Lõi tải video và chuyển đổi âm thanh (yt-dlp + FFmpeg), tách Ca sĩ – Tên bài
-├── download_queue.py    # Hàng đợi tải nhiều bài trong luồng nền
-├── audio_tools.py       # Cắt / ghép / hiệu ứng / dạng sóng / nghe thử bằng FFmpeg
-├── clipboard_monitor.py # Luồng chạy ngầm tự động bắt link YouTube / Facebook
-├── config.py            # Lưu / đọc cài đặt người dùng (JSON)
-├── i18n.py              # Chuỗi giao diện Tiếng Việt / English
-├── platform_utils.py    # Mở thư mục / phát file theo hệ điều hành
-├── selftest.py          # Tự kiểm tra (--check): FFmpeg, chuyển đổi, ảnh bìa, cắt ghép
-├── version.py           # Số phiên bản
-├── tests/               # Bộ kiểm thử (unittest)
-├── build_exe.py         # Đóng gói thành một file chạy với PyInstaller
-├── packaging/           # Script build FFmpeg tối giản, icon, ghi chú phát hành
-├── .github/workflows/   # GitHub Actions: tự build & phát hành bản Windows / Linux
-├── setup_venv.sh        # Script khởi tạo môi trường ảo Python và cài đặt thư viện
-├── run.sh               # Script chạy nhanh ứng dụng qua môi trường ảo .venv
-├── requirements.txt     # Danh sách thư viện phụ thuộc
-├── LICENSE              # Giấy phép MIT
+├── Cargo.toml            # Cấu hình gói và thư viện Rust
+├── src/                  # Mã nguồn Rust hiệu năng cao
+│   ├── lib.rs            # Điểm xuất khẩu các module Rust
+│   ├── main.rs           # CLI và trình chạy chính bằng Rust
+│   ├── audio.rs          # Cắt, ghép, hiệu ứng, phân tích dạng sóng FFmpeg
+│   ├── clipboard.rs      # Giám sát clipboard đa nền tảng
+│   ├── config.rs         # Lưu và đọc cài đặt JSON an toàn (atomic)
+│   ├── downloader.rs     # Nhận diện link, lọc từ rác, yt-dlp & FFmpeg
+│   ├── i18n.rs           # Đa ngôn ngữ Tiếng Việt / Tiếng Anh
+│   ├── platform.rs       # Mở thư mục và phát audio theo hệ điều hành
+│   ├── queue.rs          # Hàng đợi tải đa trạng thái, đa luồng an toàn
+│   ├── selftest.rs       # Tự kiểm tra âm thanh & FFmpeg offline
+│   └── version.rs        # Định nghĩa số phiên bản
+├── run_rust.bat          # Script chạy nhanh bản Rust trên Windows
+├── run_rust.sh           # Script chạy nhanh bản Rust trên Linux
+├── main.py               # Điểm khởi chạy chính (hỗ trợ cả GUI và CLI)
+├── app_ui.py             # Cửa sổ chính: tiêu đề, chọn ngôn ngữ, 2 tab (CustomTkinter)
+├── ui_download.py        # Tab tải nhạc: nhập link, định dạng, hàng đợi
+├── ui_editor.py          # Tab cắt & ghép: danh sách đoạn, dạng sóng, hiệu ứng, xuất file
+├── downloader.py         # Lõi tải video và chuyển đổi âm thanh (yt-dlp + FFmpeg), tách Ca sĩ – Tên bài
+├── download_queue.py     # Hàng đợi tải nhiều bài trong luồng nền
+├── audio_tools.py        # Cắt / ghép / hiệu ứng / dạng sóng / nghe thử bằng FFmpeg
+├── clipboard_monitor.py  # Luồng chạy ngầm tự động bắt link YouTube / Facebook
+├── config.py             # Lưu / đọc cài đặt người dùng (JSON)
+├── i18n.py               # Chuỗi giao diện Tiếng Việt / English
+├── platform_utils.py     # Mở thư mục / phát file theo hệ điều hành
+├── selftest.py           # Tự kiểm tra (--check): FFmpeg, chuyển đổi, ảnh bìa, cắt ghép
+├── version.py            # Số phiên bản
+├── tests/                # Bộ kiểm thử (Rust test suite & Python unittest)
+│   ├── test_rust_suite.rs # Bộ kiểm thử toàn diện bằng Rust
+│   ├── test_audio_tools.py
+│   ├── test_config_i18n.py
+│   ├── test_downloader.py
+│   └── test_queue.py
+├── build_exe.py          # Đóng gói thành một file chạy với PyInstaller
+├── packaging/            # Script build FFmpeg tối giản, icon, ghi chú phát hành
+├── .github/workflows/    # GitHub Actions: tự build & phát hành bản Windows / Linux
+├── setup_venv.sh         # Script khởi tạo môi trường ảo Python và cài đặt thư viện
+├── run.sh                # Script chạy nhanh ứng dụng qua môi trường ảo .venv
+├── requirements.txt      # Danh sách thư viện phụ thuộc
+├── LICENSE               # Giấy phép MIT
 ├── THIRD_PARTY_NOTICES.md # Giấy phép các thành phần đóng gói kèm (FFmpeg, yt-dlp...)
-├── README.md            # Tài liệu hướng dẫn sử dụng (Tiếng Anh)
-└── README_VI.md         # Tài liệu hướng dẫn sử dụng (Tiếng Việt)
+├── README.md             # Tài liệu hướng dẫn sử dụng (Tiếng Anh)
+└── README_VI.md          # Tài liệu hướng dẫn sử dụng (Tiếng Việt)
 ```

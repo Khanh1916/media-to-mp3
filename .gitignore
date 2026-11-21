@@ -10,9 +10,14 @@ build/
 dist/
 *.spec
 
+/target/
+**/*.rs.bk
+
 *.mp3
 *.mp4
 *.wav
+*.m4a
+*.flac
 
 .env
 .DS_Store

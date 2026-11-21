@@ -206,32 +206,79 @@ Every pull request is built and self-checked the same way (without publishing).
 
 ---
 
+## 🦀 Rust Edition (High Performance & Pure Native)
+
+The core engine, audio pipeline and CLI can be compiled into a lightning-fast native binary with zero Python runtime overhead:
+
+```bash
+# Build release binary:
+cargo build --release
+
+# Run automated tests:
+cargo test
+
+# Run offline self-check:
+./target/release/media-to-mp3 --check
+
+# Download a video via CLI:
+./target/release/media-to-mp3 "https://www.youtube.com/watch?v=..."
+
+# Run background clipboard monitor:
+./target/release/media-to-mp3 --monitor
+```
+
+Or use the provided launcher scripts:
+- **Windows**: `.\run_rust.bat "https://www.youtube.com/watch?v=..."`
+- **Linux**: `./run_rust.sh "https://www.youtube.com/watch?v=..."`
+
+---
+
 ## 📁 Project Structure
 
 ```
 media-to-mp3/
-├── main.py              # Main entry point (supports both GUI and CLI)
-├── app_ui.py            # Main window: header, language switch, 2 tabs (CustomTkinter)
-├── ui_download.py       # Download tab: link input, formats, queue
-├── ui_editor.py         # Cut & Join tab: clip list, waveform, effects, export
-├── downloader.py        # Core download & audio conversion (yt-dlp + FFmpeg), Artist – Title detection
-├── download_queue.py    # Background queue that downloads items one by one
-├── audio_tools.py       # Cut / join / effects / waveform / preview with FFmpeg
-├── clipboard_monitor.py # Background thread for auto-detecting YouTube & Facebook links
-├── config.py            # Save / load user settings (JSON)
-├── i18n.py              # English / Vietnamese UI strings
-├── platform_utils.py    # Open folders / play files per operating system
-├── selftest.py          # Self-check (--check): FFmpeg, conversion, cover art, cut & join
-├── version.py           # Version number
-├── tests/               # Test suite (unittest)
-├── build_exe.py         # Single-file packaging with PyInstaller
-├── packaging/           # Minimal FFmpeg build script, icon, release notes
-├── .github/workflows/   # GitHub Actions: build & publish Windows / Linux releases
-├── setup_venv.sh        # Helper script to setup Python virtual environment
-├── run.sh               # Launcher script to run the app via .venv
-├── requirements.txt     # Python package dependencies
-├── LICENSE              # MIT License
+├── Cargo.toml            # Rust package manifest & dependencies
+├── src/                  # High-performance Rust implementation
+│   ├── lib.rs            # Library entry point exporting modules
+│   ├── main.rs           # Rust CLI & application runner
+│   ├── audio.rs          # FFmpeg cut, join, effects, waveform peaks
+│   ├── clipboard.rs      # Cross-platform clipboard detection thread
+│   ├── config.rs         # Safe atomic JSON settings storage
+│   ├── downloader.rs     # Video info, noise stripping, yt-dlp & FFmpeg
+│   ├── i18n.rs           # English / Vietnamese translations
+│   ├── platform.rs       # Native OS explorer and audio preview
+│   ├── queue.rs          # Thread-safe multi-status download queue
+│   ├── selftest.rs       # Comprehensive offline audio & FFmpeg tests
+│   └── version.rs        # Application version definition
+├── run_rust.bat          # Windows launcher for Rust binary
+├── run_rust.sh           # Linux launcher for Rust binary
+├── main.py               # Main entry point (supports both GUI and CLI)
+├── app_ui.py             # Main window: header, language switch, 2 tabs (CustomTkinter)
+├── ui_download.py        # Download tab: link input, formats, queue
+├── ui_editor.py          # Cut & Join tab: clip list, waveform, effects, export
+├── downloader.py         # Core download & audio conversion (yt-dlp + FFmpeg), Artist – Title detection
+├── download_queue.py     # Background queue that downloads items one by one
+├── audio_tools.py        # Cut / join / effects / waveform / preview with FFmpeg
+├── clipboard_monitor.py  # Background thread for auto-detecting YouTube & Facebook links
+├── config.py             # Save / load user settings (JSON)
+├── i18n.py               # English / Vietnamese UI strings
+├── platform_utils.py     # Open folders / play files per operating system
+├── selftest.py           # Self-check (--check): FFmpeg, conversion, cover art, cut & join
+├── version.py            # Version number
+├── tests/                # Test suite (Rust integration tests & Python unittests)
+│   ├── test_rust_suite.rs # Rust test suite
+│   ├── test_audio_tools.py
+│   ├── test_config_i18n.py
+│   ├── test_downloader.py
+│   └── test_queue.py
+├── build_exe.py          # Single-file packaging with PyInstaller
+├── packaging/            # Minimal FFmpeg build script, icon, release notes
+├── .github/workflows/    # GitHub Actions: build & publish Windows / Linux releases
+├── setup_venv.sh         # Helper script to setup Python virtual environment
+├── run.sh                # Launcher script to run the app via .venv
+├── requirements.txt      # Python package dependencies
+├── LICENSE               # MIT License
 ├── THIRD_PARTY_NOTICES.md # Licenses of bundled components (FFmpeg, yt-dlp...)
-├── README.md            # Documentation (English)
-└── README_VI.md         # Documentation (Vietnamese)
+├── README.md             # Documentation (English)
+└── README_VI.md          # Documentation (Vietnamese)
 ```
