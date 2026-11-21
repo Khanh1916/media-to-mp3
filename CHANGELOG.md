@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Native OS Dialogs**: Replaced custom file dialogs with native system pickers via `rfd`.
 
 ### Added
-- **Multi-Platform AI Agent Ecosystem**: Added `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.github/copilot-instructions.md`, and `.gemini/GEMINI.md`.
+- **Multi-Platform AI Agent Ecosystem**: Added `AGENTS.md`, `.cursorrules`, `.github/copilot-instructions.md`, and `.gemini/GEMINI.md`.
 - **Professional GitHub Infrastructure**: Added automated multi-platform CI/CD (`.github/workflows/ci.yml`, `release.yml`), Issue & PR templates, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and `SECURITY.md`.
 - **Audio Processing Pipeline**: Direct FFmpeg stream extraction, loudnorm EBU R128 normalization, volume gain, fade in/out, and raw PCM waveform peaks.
 - **Automated Test Suite**: Added 23 comprehensive unit and integration tests (`tests/test_rust_suite.rs`).

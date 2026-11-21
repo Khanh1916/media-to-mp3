@@ -1,6 +1,6 @@
 # AGENTS.md — Universal Agent Instructions & Developer Guide
 
-Welcome, autonomous agent! This document is the unified guide for AI coding agents (including OpenAI Codex, Anthropic Claude Code, Google Antigravity / Gemini CLI, Cursor, and GitHub Copilot) working in this repository.
+Welcome, autonomous agent! This document is the unified guide for AI coding agents (including OpenAI Codex, Google Antigravity / Gemini CLI, Cursor, and GitHub Copilot) working in this repository.
 
 ---
 
