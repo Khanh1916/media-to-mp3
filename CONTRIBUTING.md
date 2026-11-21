@@ -4,13 +4,13 @@ First off, thank you for considering contributing to **Media to MP3**! Projects 
 
 ---
 
-## 🧭 Code of Conduct
+## Code of Conduct
 
 This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
 
 ---
 
-## 🛠️ Development Setup
+## Development Setup
 
 ### 1. Prerequisites
 - **Rust Toolchain**: Install via [rustup](https://rustup.rs/) (Rust 1.80+).
@@ -28,7 +28,7 @@ cd media-to-mp3
 
 ---
 
-## 🧪 Testing & Quality Standards
+## Testing & Quality Standards
 
 Before submitting any code, verify that all quality checks pass cleanly:
 
@@ -55,7 +55,7 @@ Before submitting any code, verify that all quality checks pass cleanly:
 
 ---
 
-## 🌿 Git & Pull Request Workflow
+## Git & Pull Request Workflow
 
 1. **Create a topic branch**:
    ```bash
