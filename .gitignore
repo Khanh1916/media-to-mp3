@@ -1,5 +1,6 @@
 # Rust build artifacts
 /target/
+*.exe
 **/*.rs.bk
 Cargo.lock.bak
 

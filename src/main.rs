@@ -1,3 +1,5 @@
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
 use clap::Parser;
 use indicatif::{ProgressBar, ProgressStyle};
 use media_to_mp3::downloader::{get_ffmpeg_path, MediaDownloader};
@@ -62,6 +64,17 @@ struct Args {
 }
 
 fn main() {
+    #[cfg(target_os = "windows")]
+    if std::env::args().len() > 1 {
+        unsafe {
+            #[link(name = "kernel32")]
+            extern "system" {
+                fn AttachConsole(dwProcessId: u32) -> i32;
+            }
+            AttachConsole(0xFFFF_FFFF);
+        }
+    }
+
     let args = Args::parse();
 
     // Set language
