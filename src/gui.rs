@@ -67,6 +67,7 @@ pub struct MediaToMp3App {
 
 impl MediaToMp3App {
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
+        setup_custom_fonts(&cc.egui_ctx);
         setup_custom_theme(&cc.egui_ctx);
 
         let settings = load_settings(None::<&Path>);
@@ -190,6 +191,38 @@ impl MediaToMp3App {
     }
 }
 
+fn setup_custom_fonts(ctx: &egui::Context) {
+    let mut fonts = egui::FontDefinitions::default();
+
+    let candidates = [
+        "C:\\Windows\\Fonts\\segoeui.ttf",
+        "C:\\Windows\\Fonts\\arial.ttf",
+        "C:\\Windows\\Fonts\\tahoma.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
+        "/usr/share/fonts/TTF/DejaVuSans.ttf",
+        "/System/Library/Fonts/SFNS.ttf",
+        "/Library/Fonts/Arial.ttf",
+    ];
+
+    for path in &candidates {
+        if let Ok(bytes) = std::fs::read(path) {
+            fonts.font_data.insert(
+                "system_unicode".to_owned(),
+                egui::FontData::from_owned(bytes),
+            );
+            fonts
+                .families
+                .entry(egui::FontFamily::Proportional)
+                .or_default()
+                .insert(0, "system_unicode".to_owned());
+            break;
+        }
+    }
+
+    ctx.set_fonts(fonts);
+}
+
 fn setup_custom_theme(ctx: &egui::Context) {
     let mut visuals = egui::Visuals::dark();
 
@@ -232,7 +265,7 @@ impl eframe::App for MediaToMp3App {
             ui.add_space(8.0);
             ui.horizontal(|ui| {
                 ui.add_space(4.0);
-                ui.heading("🎵 Media to MP3");
+                ui.heading("Media to MP3");
                 ui.colored_label(Color32::from_rgb(148, 163, 184), format!("v{}", VERSION));
 
                 ui.add_space(24.0);
@@ -240,7 +273,7 @@ impl eframe::App for MediaToMp3App {
                 // Tab Switcher
                 let dl_btn = ui.selectable_label(
                     self.tab == ActiveTab::Download,
-                    format!("⬇ {}", t("tab_download", &[])),
+                    format!("↓ {}", t("tab_download", &[])),
                 );
                 if dl_btn.clicked() {
                     self.tab = ActiveTab::Download;
@@ -260,9 +293,9 @@ impl eframe::App for MediaToMp3App {
                     // Language switch button
                     let cur_lang = i18n::get_language();
                     let lang_label = if cur_lang == "vi" {
-                        "🇻🇳 Tiếng Việt"
+                        "VI | Tiếng Việt"
                     } else {
-                        "🇬🇧 English"
+                        "EN | English"
                     };
                     if ui.button(lang_label).clicked() {
                         if cur_lang == "vi" {
@@ -275,7 +308,7 @@ impl eframe::App for MediaToMp3App {
 
                     // Open save directory button
                     if ui
-                        .button(format!("📂 {}", t("btn_open_folder", &[])))
+                        .button(format!("📁 {}", t("btn_open_folder", &[])))
                         .clicked()
                     {
                         open_path_in_explorer(&self.output_dir);
@@ -382,7 +415,7 @@ impl MediaToMp3App {
                     );
 
                     // Paste button
-                    if ui.button(format!("📋 {}", t("btn_paste", &[]))).clicked() {
+                    if ui.button(t("btn_paste", &[])).clicked() {
                         if let Ok(mut cb) = Clipboard::new() {
                             if let Ok(text) = cb.get_text() {
                                 self.url_input = text.trim().to_string();
@@ -392,7 +425,7 @@ impl MediaToMp3App {
 
                     // Add to Queue Button
                     let add_btn = ui.add(
-                        egui::Button::new(format!("➕ {}", t("btn_add_queue", &[])))
+                        egui::Button::new(format!("+ {}", t("btn_add_queue", &[])))
                             .fill(Color32::from_rgb(99, 102, 241)),
                     );
 
@@ -554,7 +587,7 @@ impl MediaToMp3App {
             .show(ui, |ui| {
                 ui.horizontal(|ui| {
                     if ui
-                        .button(format!("📂 {}", t("ed_add_files", &[])))
+                        .button(format!("📁 {}", t("ed_add_files", &[])))
                         .clicked()
                     {
                         if let Some(file) = rfd::FileDialog::new()
@@ -601,7 +634,7 @@ impl MediaToMp3App {
             .inner_margin(10.0)
             .show(ui, |ui| {
                 ui.horizontal(|ui| {
-                    ui.label("📈 Waveform");
+                    ui.label("Waveform");
                     ui.colored_label(Color32::from_rgb(100, 116, 139), t("ed_wave_hint", &[]));
                 });
                 ui.add_space(4.0);
@@ -924,21 +957,21 @@ fn render_queue_card(ui: &mut egui::Ui, item: &QueueItem, app: &mut MediaToMp3Ap
                             play_audio_file(&item.file_path);
                         }
                         if ui
-                            .button(format!("📂 {}", t("btn_open_folder", &[])))
+                            .button(format!("📁 {}", t("btn_open_folder", &[])))
                             .clicked()
                         {
                             open_path_in_explorer(&item.file_path);
                         }
                     } else if item.status == ERROR || item.status == CANCELLED {
-                        if ui.button(format!("🔁 {}", t("btn_retry", &[]))).clicked() {
+                        if ui.button(format!("↺ {}", t("btn_retry", &[]))).clicked() {
                             app.queue.retry(item.id);
                         }
-                        if ui.button(format!("✖ {}", t("btn_remove", &[]))).clicked() {
+                        if ui.button(format!("✕ {}", t("btn_remove", &[]))).clicked() {
                             app.queue.remove(item.id);
                         }
                     } else if is_active_status(&item.status)
                         && ui
-                            .button(format!("⏹ {}", t("btn_cancel_current", &[])))
+                            .button(format!("■ {}", t("btn_cancel_current", &[])))
                             .clicked()
                     {
                         app.queue.cancel_current();

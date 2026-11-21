@@ -10,7 +10,11 @@
 
 A high-performance, standalone desktop application and command-line utility built in pure Rust. Media to MP3 downloads video streams from YouTube and Facebook as high-fidelity audio (MP3, M4A, FLAC, WAV) and provides an integrated waveform audio editor for trimming, concatenating, and normalizing audio tracks.
 
-Engineered with eframe and egui, the application compiles into a single, compact binary (~7.6 MB) with instant launch, minimal memory usage (<30 MB RAM), and zero external runtime dependencies.
+Engineered with eframe and egui, the application compiles into a single, compact binary (~5.8 MB) with instant launch, minimal memory usage (<30 MB RAM), and zero external runtime dependencies.
+
+Built for two distinct workflows:
+- **Everyday Users**: Download the standalone executable (`MediaToMP3.exe`), double-click to launch the native GUI immediately with 1-click simplicity and zero terminal setup.
+- **Developers & Tech Users**: Clone the repository to build from source and run the headless CLI (`media-to-mp3 <URL> -f mp3 -b 320`) for automation pipelines and headless servers.
 
 Author: **KhanhNN (Cao Thanh Lam)**
 

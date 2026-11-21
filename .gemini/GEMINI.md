@@ -1,4 +1,4 @@
-# Gemini & Antigravity Agent Guide — media-to-mp3
+# Gemini & Antigravity Agent Guide: media-to-mp3
 
 Welcome, Gemini / Antigravity agent! This repository has been completely converted from a legacy Python codebase into a **pure Rust** native application and CLI tool.
 

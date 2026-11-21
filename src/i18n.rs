@@ -98,7 +98,7 @@ mod tests {
     }
 
     #[test]
-    fn test_switch_language_and_fallbacks() {
+    fn test_i18n_language_and_params() {
         set_language("en");
         assert_eq!(get_language(), "en");
         let done_msg = t("st_done", &[]);
@@ -108,12 +108,9 @@ mod tests {
         assert_eq!(get_language(), "en");
 
         assert_eq!(t("no_such_key", &[]), "no_such_key");
-        set_language("vi");
-    }
 
-    #[test]
-    fn test_params_replacement() {
         set_language("vi");
+        assert_eq!(get_language(), "vi");
         let msg = t("st_error", &[("error", "mất kết nối")]);
         assert!(msg.contains("mất kết nối"));
     }

@@ -8,9 +8,13 @@
 
 [English](README.md) | Tiếng Việt
 
-Media to MP3 là app tải âm thanh từ video YouTube và Facebook, xuất ra file MP3, M4A, WAV hoặc FLAC kèm công cụ cắt và ghép nhạc trực quan. Dự án ban đầu tôi viết bằng Python, sau đó viết lại hoàn toàn bằng Rust thành một file binary duy nhất nặng khoảng 7.6 MB. App khởi động ngay, tốn chưa tới 30 MB RAM khi chạy, không cần cài Python hay virtualenv.
+Media to MP3 là app tải âm thanh từ video YouTube và Facebook, xuất ra file MP3, M4A, WAV hoặc FLAC kèm công cụ cắt và ghép nhạc trực quan. Dự án ban đầu tôi viết bằng Python, sau đó viết lại hoàn toàn bằng Rust thành một file binary duy nhất nặng khoảng 5.8 MB. App khởi động ngay, tốn chưa tới 30 MB RAM khi chạy, không cần cài Python hay virtualenv.
 
-App hỗ trợ cả giao diện đồ họa (GUI) lẫn dòng lệnh (CLI), chạy trên Windows, Linux và macOS. Ta có thể đổi qua lại giữa tiếng Việt và tiếng Anh ngay trên thanh tiêu đề mà không cần khởi động lại.
+Dự án phục vụ cả hai nhu cầu:
+- Người dùng bình thường: tải file `MediaToMP3.exe` ở trang release về nhấp đúp là mở giao diện đồ họa dùng ngay, 1 click, không cần cài đặt.
+- Dân kỹ thuật: clone mã nguồn về dùng bản CLI trong terminal (`media-to-mp3 <URL> -f mp3 -b 320`), chạy trên máy chủ không có màn hình hoặc gắn vào script tự động hóa.
+
+Ta có thể đổi qua lại giữa tiếng Việt và tiếng Anh ngay trên thanh tiêu đề mà không cần khởi động lại.
 
 Tác giả: KhanhNN (a.k.a Cao Thanh Lam)
 
@@ -43,7 +47,7 @@ Tải file chạy ở [trang release mới nhất](https://github.com/Khanh1916/
 
 | Hệ điều hành | File tải về | Cách chạy |
 | --- | --- | --- |
-| Windows 10 / 11 (64-bit) | `media-to-mp3-windows-x64.zip` | Giải nén rồi mở file `media-to-mp3.exe` (hoặc chạy qua `run.bat`). |
+| Windows 10 / 11 (64-bit) | `MediaToMP3.exe` (hoặc `.zip`) | Nhấp đúp mở file `MediaToMP3.exe` dùng ngay (hoặc chạy qua `run.bat`). |
 | Linux 64-bit | `media-to-mp3-linux-x64.tar.gz` | Giải nén rồi chạy `./media-to-mp3` (hoặc `./run.sh`). |
 | macOS | `media-to-mp3-macos-*.tar.gz` | Giải nén và mở file app. |
 

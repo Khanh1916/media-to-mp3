@@ -218,11 +218,18 @@ fn main() {
     }
 
     // Default: Launch modern native GUI with eframe
+    let icon_data = eframe::icon_data::from_png_bytes(include_bytes!("../assets/icon.png")).ok();
+    let mut viewport = eframe::egui::ViewportBuilder::default()
+        .with_inner_size([960.0, 680.0])
+        .with_min_inner_size([800.0, 560.0])
+        .with_title("Media to MP3 - YouTube & Facebook");
+
+    if let Some(icon) = icon_data {
+        viewport = viewport.with_icon(icon);
+    }
+
     let native_options = eframe::NativeOptions {
-        viewport: eframe::egui::ViewportBuilder::default()
-            .with_inner_size([960.0, 680.0])
-            .with_min_inner_size([800.0, 560.0])
-            .with_title("Media to MP3 - YouTube & Facebook"),
+        viewport,
         ..Default::default()
     };
 
