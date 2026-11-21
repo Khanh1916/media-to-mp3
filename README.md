@@ -1,7 +1,9 @@
 # 🎵 Media to MP3 Downloader (YouTube & Facebook)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![CI](https://github.com/Khanh1916/media-to-mp3/actions/workflows/ci.yml/badge.svg)](https://github.com/Khanh1916/media-to-mp3/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/Khanh1916/media-to-mp3)](https://github.com/Khanh1916/media-to-mp3/releases)
 [![Rust](https://img.shields.io/badge/Rust-1.80%2B-orange.svg)](https://www.rust-lang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](https://github.com/Khanh1916/media-to-mp3)
 
 [English](README.md) | [Tiếng Việt](README_VI.md)
@@ -107,13 +109,32 @@ Pass one or more video URLs to download immediately in headless mode:
 
 ---
 
-## 🧪 Testing
+## 🧪 Testing & Quality Assurance
 
 Run the comprehensive test suite (23 automated unit and integration tests covering audio processing, configuration persistence, download queues, and title cleansing):
 
 ```bash
+# Run unit & integration tests
 cargo test
+
+# Strict linter check
+cargo clippy -- -D warnings
+
+# Format verification
+cargo fmt -- --check
 ```
+
+---
+
+## 🤖 Multi-Platform AI Agent Guides
+
+This repository includes native instructions and context files for all major AI coding agents:
+
+- **[AGENTS.md](AGENTS.md)**: Universal Agent Specification (for Codex, Devin, Copilot, Gemini)
+- **[CLAUDE.md](CLAUDE.md)**: Anthropic Claude Code developer guide
+- **[.cursorrules](.cursorrules)**: Cursor AI IDE configuration rules
+- **[.github/copilot-instructions.md](.github/copilot-instructions.md)**: GitHub Copilot Workspace instructions
+- **[.gemini/GEMINI.md](.gemini/GEMINI.md)**: Gemini CLI & Antigravity configuration guide
 
 ---
 
@@ -121,8 +142,23 @@ cargo test
 
 ```
 media-to-mp3/
-├── Cargo.toml            # Rust package dependencies and build profiles
+├── .github/              # GitHub Actions CI/CD & Community Health
+│   ├── workflows/        # Automated CI & Multi-platform Release workflows
+│   ├── ISSUE_TEMPLATE/   # Bug report and feature request templates
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   ├── copilot-instructions.md
+│   └── dependabot.yml    # Weekly dependency updates
+├── Cargo.toml            # Package manifest, dependencies, release optimizations
 ├── Cargo.lock            # Exact reproducible dependency tree
+├── rustfmt.toml          # Rust code formatting rules
+├── clippy.toml           # Clippy linter settings
+├── AGENTS.md             # Universal AI Agent Specification
+├── CLAUDE.md             # Claude Code development guidelines
+├── .cursorrules          # Cursor AI IDE instructions
+├── CONTRIBUTING.md       # Contributing guidelines
+├── CODE_OF_CONDUCT.md   # Contributor Covenant 2.1
+├── SECURITY.md           # Security vulnerability reporting policy
+├── CHANGELOG.md          # Version changelog
 ├── run.bat               # Windows instant launcher & auto-builder
 ├── run.sh                # Linux / macOS launcher script
 ├── src/                  # Pure Rust codebase

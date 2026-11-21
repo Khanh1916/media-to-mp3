@@ -26,22 +26,28 @@ fn test_config_lifecycle() {
 #[test]
 fn test_i18n_translation_and_formatting() {
     i18n::set_language("vi");
-    let vi_msg = t("queue_summary", &[
-        ("total", "5"),
-        ("active", "1"),
-        ("pending", "2"),
-        ("done", "2"),
-    ]);
+    let vi_msg = t(
+        "queue_summary",
+        &[
+            ("total", "5"),
+            ("active", "1"),
+            ("pending", "2"),
+            ("done", "2"),
+        ],
+    );
     assert!(vi_msg.contains("5 bài"));
     assert!(vi_msg.contains("1 đang tải"));
 
     i18n::set_language("en");
-    let en_msg = t("queue_summary", &[
-        ("total", "5"),
-        ("active", "1"),
-        ("pending", "2"),
-        ("done", "2"),
-    ]);
+    let en_msg = t(
+        "queue_summary",
+        &[
+            ("total", "5"),
+            ("active", "1"),
+            ("pending", "2"),
+            ("done", "2"),
+        ],
+    );
     assert!(en_msg.contains("5 items"));
     assert!(en_msg.contains("1 downloading"));
     i18n::set_language("vi");
@@ -75,16 +81,16 @@ fn test_downloader_parser_comprehensive() {
             Some("Ed Sheeran"),
             ("Ed Sheeran", "Shape of You"),
         ),
-        (
-            "Song Name",
-            Some("Artist - Topic"),
-            ("Artist", "Song Name"),
-        ),
+        ("Song Name", Some("Artist - Topic"), ("Artist", "Song Name")),
     ];
 
     for (input, uploader, (expected_artist, expected_track)) in cases {
         let (artist, track) = parse_artist_title(input, uploader);
-        assert_eq!(artist, expected_artist, "Failed artist for input: {}", input);
+        assert_eq!(
+            artist, expected_artist,
+            "Failed artist for input: {}",
+            input
+        );
         assert_eq!(track, expected_track, "Failed track for input: {}", input);
     }
 }

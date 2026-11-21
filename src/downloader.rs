@@ -53,21 +53,14 @@ static NOISE_WORDS: Lazy<Regex> = Lazy::new(|| {
     Regex::new(r"(?i)\b(official|officiel|music|musical|video|audio|lyrics?|visuali[sz]er|m/?v|clip|remaster(?:ed)?|4k|8k|uhd|hd|hq|\d{3,4}p|full|vietsub|engsub|lời bài hát|loi bai hat)\b").unwrap()
 });
 
-static BRACKETS: Lazy<Regex> = Lazy::new(|| {
-    Regex::new(r"\s*[(\[{【]([^()\[\]{}【】]*)[)\]}】]").unwrap()
-});
+static BRACKETS: Lazy<Regex> =
+    Lazy::new(|| Regex::new(r"\s*[(\[{【]([^()\[\]{}【】]*)[)\]}】]").unwrap());
 
-static PIPE_SEP: Lazy<Regex> = Lazy::new(|| {
-    Regex::new(r"\s+[|｜]\s+").unwrap()
-});
+static PIPE_SEP: Lazy<Regex> = Lazy::new(|| Regex::new(r"\s+[|｜]\s+").unwrap());
 
-static DASH_SEP: Lazy<Regex> = Lazy::new(|| {
-    Regex::new(r"\s+[-–—~]\s+").unwrap()
-});
+static DASH_SEP: Lazy<Regex> = Lazy::new(|| Regex::new(r"\s+[-–—~]\s+").unwrap());
 
-static NON_WORD_DIGIT: Lazy<Regex> = Lazy::new(|| {
-    Regex::new(r"[\W\d_]+").unwrap()
-});
+static NON_WORD_DIGIT: Lazy<Regex> = Lazy::new(|| Regex::new(r"[\W\d_]+").unwrap());
 
 pub fn is_noise(text: &str) -> bool {
     let trimmed = text.trim();
@@ -134,7 +127,9 @@ pub fn parse_artist_title(title: &str, uploader: Option<&str>) -> (String, Strin
         }
     };
 
-    track = track.trim_matches(|c| c == ' ' || c == '-' || c == '–' || c == '—' || c == '|').to_string();
+    track = track
+        .trim_matches(|c| c == ' ' || c == '-' || c == '–' || c == '—' || c == '|')
+        .to_string();
     if track.is_empty() {
         track = title.trim().to_string();
     }
@@ -228,6 +223,7 @@ impl MediaDownloader {
         self.is_cancelled.store(true, Ordering::SeqCst);
     }
 
+    #[allow(clippy::too_many_arguments)]
     pub fn download_audio<P, F, E>(
         &self,
         url: &str,
@@ -260,7 +256,10 @@ impl MediaDownloader {
         let (prog, mut args) = if which::which("yt-dlp").is_ok() {
             ("yt-dlp".to_string(), Vec::new())
         } else {
-            ("python".to_string(), vec!["-m".to_string(), "yt_dlp".to_string()])
+            (
+                "python".to_string(),
+                vec!["-m".to_string(), "yt_dlp".to_string()],
+            )
         };
 
         args.push("--extract-audio".to_string());
@@ -381,6 +380,9 @@ mod tests {
             "YouTube"
         );
         assert_eq!(identify_platform("https://fb.watch/123"), "Facebook");
-        assert_eq!(identify_platform("https://tiktok.com/@user/video/123"), "TikTok");
+        assert_eq!(
+            identify_platform("https://tiktok.com/@user/video/123"),
+            "TikTok"
+        );
     }
 }

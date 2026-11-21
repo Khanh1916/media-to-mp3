@@ -1,7 +1,9 @@
 # 🎵 Media to MP3 Downloader (YouTube & Facebook)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![CI](https://github.com/Khanh1916/media-to-mp3/actions/workflows/ci.yml/badge.svg)](https://github.com/Khanh1916/media-to-mp3/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/Khanh1916/media-to-mp3)](https://github.com/Khanh1916/media-to-mp3/releases)
 [![Rust](https://img.shields.io/badge/Rust-1.80%2B-orange.svg)](https://www.rust-lang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](https://github.com/Khanh1916/media-to-mp3)
 
 [English](README.md) | [Tiếng Việt](README_VI.md)
@@ -108,22 +110,56 @@ Truyền URL video trực tiếp để tải nhanh không cần mở cửa sổ:
 
 ---
 
-## 🧪 Kiểm Thử Tự Động
+## 🧪 Kiểm Thử & Đảm Bảo Chất Lượng
 
-Bộ test hoàn chỉnh gồm 23 unit test và integration test bao quát toàn bộ logic xử lý âm thanh, hàng đợi, lưu trữ cấu hình, bộ lọc:
+Chạy bộ test hoàn chỉnh gồm 23 unit test và integration test bao quát toàn bộ logic xử lý âm thanh, hàng đợi, lưu trữ cấu hình, bộ lọc:
 
 ```bash
+# Chạy toàn bộ test
 cargo test
+
+# Kiểm tra linter nghiêm ngặt
+cargo clippy -- -D warnings
+
+# Kiểm tra định dạng code
+cargo fmt -- --check
 ```
 
 ---
 
-## 📁 Cấu Trúc Thư Mục
+## 🤖 Hướng Dẫn Cho Các Agent AI Đa Nền Tảng
+
+Kho lưu trữ tích hợp sẵn các tài liệu hướng dẫn chuẩn chỉ cho mọi công cụ lập trình AI thông dụng:
+
+- **[AGENTS.md](AGENTS.md)**: Hướng dẫn tổng quát đa nền tảng (Codex, Devin, Copilot, Gemini)
+- **[CLAUDE.md](CLAUDE.md)**: Hướng dẫn dành riêng cho Anthropic Claude Code
+- **[.cursorrules](.cursorrules)**: Quy tắc dành riêng cho Cursor AI IDE
+- **[.github/copilot-instructions.md](.github/copilot-instructions.md)**: Hướng dẫn cho GitHub Copilot
+- **[.gemini/GEMINI.md](.gemini/GEMINI.md)**: Tài liệu chỉ dẫn cho Gemini CLI & Antigravity
+
+---
+
+## 📁 Cấu Trúc Thư Mục Chuẩn Chỉ
 
 ```
 media-to-mp3/
-├── Cargo.toml            # Cấu hình gói và thư viện Rust
+├── .github/              # Hạ tầng GitHub Actions CI/CD & Community
+│   ├── workflows/        # Tự động hóa CI (kiểm thử đa nền tảng) & Release
+│   ├── ISSUE_TEMPLATE/   # Mẫu báo lỗi và yêu cầu tính năng
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   ├── copilot-instructions.md
+│   └── dependabot.yml    # Tự động cập nhật thư viện hàng tuần
+├── Cargo.toml            # Cấu hình gói và thư viện Rust, tối ưu release
 ├── Cargo.lock            # Khóa phiên bản dependency chính xác
+├── rustfmt.toml          # Quy chuẩn định dạng mã Rust
+├── clippy.toml           # Cấu hình linter Clippy
+├── AGENTS.md             # Tài liệu agent AI đa nền tảng
+├── CLAUDE.md             # Hướng dẫn Claude Code
+├── .cursorrules          # Cấu hình Cursor AI
+├── CONTRIBUTING.md       # Hướng dẫn đóng góp dự án
+├── CODE_OF_CONDUCT.md   # Quy tắc ứng xử cộng đồng Contributor Covenant 2.1
+├── SECURITY.md           # Chính sách báo cáo lỗ hổng bảo mật
+├── CHANGELOG.md          # Lịch sử thay đổi các phiên bản
 ├── run.bat               # Trình chạy nhanh & tự build trên Windows
 ├── run.sh                # Trình chạy nhanh trên Linux / macOS
 ├── src/                  # Toàn bộ mã nguồn thuần Rust

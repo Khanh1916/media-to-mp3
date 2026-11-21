@@ -1,0 +1,29 @@
+# Cursor Rules — Media to MP3 (Rust Edition)
+
+## Context & Technology Stack
+- You are working on **Media to MP3**, a pure Rust 2021 desktop application and CLI tool.
+- Main crates: `eframe = "0.29"`, `egui = "0.29"`, `rfd = "0.15"`, `clap = "4.5"`, `serde = "1.0"`, `indicatif = "0.17"`, `which = "7.0"`, `arboard = "3.4"`.
+- External binaries: `ffmpeg` and `yt-dlp`.
+- NO Python dependencies or runtimes are allowed in this repository.
+
+## Commands to Use
+- Check syntax: `cargo check`
+- Run tests: `cargo test`
+- Lint code: `cargo clippy -- -D warnings`
+- Format code: `cargo fmt`
+- Build release: `cargo build --release`
+
+## Coding Standards
+1. **Safety & Robustness**:
+   - Write safe, idiomatic Rust.
+   - Avoid `.unwrap()` or `.expect()` in library code (`src/audio.rs`, `src/downloader.rs`, `src/queue.rs`, `src/config.rs`).
+   - Propagate errors using `?` or map them to clean user-facing error strings.
+2. **Concurrency**:
+   - Keep Mutex locks short and scoped. Never perform process execution (`Command::new`) or file I/O inside a lock guard.
+3. **UI / Styling (`src/gui.rs`)**:
+   - Follow the established dark theme: Slate/Obsidian (`#0f1117`, `#181c26`), Indigo accent (`#6366f1`).
+   - Do NOT use generic AI template styles (no neon glow, no rainbow gradients).
+   - Use `rfd` for native OS file pickers.
+   - All text must use `i18n::t("key", &[("arg", value)])`.
+4. **Testing**:
+   - Ensure all automated unit and integration tests in `tests/test_rust_suite.rs` pass before finishing tasks.

@@ -23,7 +23,8 @@ static EMOJI_REGEX: Lazy<Regex> = Lazy::new(|| {
 });
 
 static STRINGS_MAP: Lazy<HashMap<String, HashMap<String, String>>> = Lazy::new(|| {
-    let raw: Value = serde_json::from_str(include_str!("strings.json")).expect("valid strings.json");
+    let raw: Value =
+        serde_json::from_str(include_str!("strings.json")).expect("valid strings.json");
     let mut map = HashMap::new();
     if let Some(obj) = raw.as_object() {
         for (lang, entries) in obj {

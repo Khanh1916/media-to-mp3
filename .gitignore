@@ -1,23 +1,52 @@
-__pycache__/
-*.py[cod]
-*.pyo
-
-.venv/
-venv/
-env/
-
-build/
-dist/
-*.spec
-
+# Rust build artifacts
 /target/
 **/*.rs.bk
+Cargo.lock.bak
 
+# Audio/media test outputs and temporary files
 *.mp3
 *.mp4
 *.wav
 *.m4a
 *.flac
+*.webm
+*.part
+*.ytdl
+*.aria2
 
+# Environment and secrets
 .env
+.env.*
+!.env.example
+
+# IDE & Editor files
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# Operating system files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+[Dd]esktop.ini
+
+# Legacy Python build remnants (if any)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+dist/
+build/
+*.spec

@@ -155,7 +155,12 @@ pub fn probe<P: AsRef<Path>>(path: P) -> Result<AudioInfo, String> {
     })
 }
 
-pub fn load_peaks<P: AsRef<Path>>(path: P, duration: f64, buckets: usize) -> Result<Vec<f32>, String> {
+#[allow(clippy::chunks_exact_to_as_chunks)]
+pub fn load_peaks<P: AsRef<Path>>(
+    path: P,
+    duration: f64,
+    buckets: usize,
+) -> Result<Vec<f32>, String> {
     let ffmpeg = get_ffmpeg_path().ok_or_else(|| "FFmpeg not found".to_string())?;
     let rate = (2_000_000.0 / duration.max(1.0))
         .round()
@@ -195,7 +200,11 @@ pub fn load_peaks<P: AsRef<Path>>(path: P, duration: f64, buckets: usize) -> Res
     let mut peaks = Vec::with_capacity(buckets);
 
     for chunk in samples.chunks(step) {
-        let max_val = chunk.iter().copied().map(|x| (x as f32).abs()).fold(0.0f32, f32::max);
+        let max_val = chunk
+            .iter()
+            .copied()
+            .map(|x| (x as f32).abs())
+            .fold(0.0f32, f32::max);
         peaks.push(max_val / 32768.0);
     }
 
@@ -207,6 +216,7 @@ pub fn load_peaks<P: AsRef<Path>>(path: P, duration: f64, buckets: usize) -> Res
     Ok(peaks)
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn build_export_command(
     clips: &[ClipSpec],
     out_path: &str,
@@ -284,7 +294,11 @@ pub fn build_export_command(
     }
     if fade_out > 0.0 {
         let fo = fade_out.min(total);
-        effects.push(format!("afade=t=out:st={:.3}:d={:.3}", (total - fo).max(0.0), fo));
+        effects.push(format!(
+            "afade=t=out:st={:.3}:d={:.3}",
+            (total - fo).max(0.0),
+            fo
+        ));
     }
     if gain_db.abs() > 0.001 {
         effects.push(format!("volume={:+.1}dB", gain_db));

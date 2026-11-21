@@ -96,7 +96,10 @@ impl DownloadQueue {
         }
 
         let mut items = self.items.lock().unwrap();
-        if items.iter().any(|i| i.url == trimmed && !is_finished_status(&i.status)) {
+        if items
+            .iter()
+            .any(|i| i.url == trimmed && !is_finished_status(&i.status))
+        {
             return None;
         }
 
@@ -180,8 +183,6 @@ impl DownloadQueue {
             cb(item);
         }
     }
-
-
 
     fn kick(&self) {
         let mut handle = self.worker_handle.lock().unwrap();

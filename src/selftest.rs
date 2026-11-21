@@ -86,7 +86,10 @@ pub fn run_selftest() -> Result<(), String> {
     // Probe
     let info = audio::probe(&tone_a)?;
     if (info.duration - 4.0).abs() < 0.2 {
-        println!("[OK] probe audio (duration: {:.2}s, title: {})", info.duration, info.title);
+        println!(
+            "[OK] probe audio (duration: {:.2}s, title: {})",
+            info.duration, info.title
+        );
     } else {
         return Err(format!("Probe duration mismatch: {}", info.duration));
     }

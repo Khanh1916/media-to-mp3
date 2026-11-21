@@ -4,7 +4,9 @@ use crate::config::{load_settings, save_settings, Settings};
 use crate::downloader::{get_ffmpeg_path, MediaDownloader};
 use crate::i18n::{self, t};
 use crate::platform::{open_path_in_explorer, play_audio_file};
-use crate::queue::{is_active_status, is_finished_status, DownloadQueue, QueueItem, CANCELLED, DONE, ERROR};
+use crate::queue::{
+    is_active_status, is_finished_status, DownloadQueue, QueueItem, CANCELLED, DONE, ERROR,
+};
 use crate::version::VERSION;
 use arboard::Clipboard;
 use eframe::egui::{self, Color32, Pos2, Rounding, Sense, Stroke, Vec2};
@@ -172,7 +174,13 @@ impl MediaToMp3App {
                     Err(_) => self.peaks = vec![0.5; 160],
                 }
                 self.tab = ActiveTab::Editor;
-                self.show_toast(format!("Loaded: {}", path.file_name().unwrap_or_default().to_string_lossy()), false);
+                self.show_toast(
+                    format!(
+                        "Loaded: {}",
+                        path.file_name().unwrap_or_default().to_string_lossy()
+                    ),
+                    false,
+                );
             }
             Err(e) => {
                 self.show_toast(format!("Failed to probe audio: {}", e), true);
@@ -230,12 +238,18 @@ impl eframe::App for MediaToMp3App {
                 ui.add_space(24.0);
 
                 // Tab Switcher
-                let dl_btn = ui.selectable_label(self.tab == ActiveTab::Download, format!("⬇ {}", t("tab_download", &[])));
+                let dl_btn = ui.selectable_label(
+                    self.tab == ActiveTab::Download,
+                    format!("⬇ {}", t("tab_download", &[])),
+                );
                 if dl_btn.clicked() {
                     self.tab = ActiveTab::Download;
                 }
 
-                let ed_btn = ui.selectable_label(self.tab == ActiveTab::Editor, format!("✂ {}", t("tab_editor", &[])));
+                let ed_btn = ui.selectable_label(
+                    self.tab == ActiveTab::Editor,
+                    format!("✂ {}", t("tab_editor", &[])),
+                );
                 if ed_btn.clicked() {
                     self.tab = ActiveTab::Editor;
                 }
@@ -245,7 +259,11 @@ impl eframe::App for MediaToMp3App {
                     ui.add_space(4.0);
                     // Language switch button
                     let cur_lang = i18n::get_language();
-                    let lang_label = if cur_lang == "vi" { "🇻🇳 Tiếng Việt" } else { "🇬🇧 English" };
+                    let lang_label = if cur_lang == "vi" {
+                        "🇻🇳 Tiếng Việt"
+                    } else {
+                        "🇬🇧 English"
+                    };
                     if ui.button(lang_label).clicked() {
                         if cur_lang == "vi" {
                             i18n::set_language("en");
@@ -256,7 +274,10 @@ impl eframe::App for MediaToMp3App {
                     }
 
                     // Open save directory button
-                    if ui.button(format!("📂 {}", t("btn_open_folder", &[]))).clicked() {
+                    if ui
+                        .button(format!("📂 {}", t("btn_open_folder", &[])))
+                        .clicked()
+                    {
                         open_path_in_explorer(&self.output_dir);
                     }
                 });
@@ -289,7 +310,11 @@ impl eframe::App for MediaToMp3App {
                 if let Some((ref msg, time, is_err)) = self.toast_msg {
                     if time.elapsed() < Duration::from_secs(4) {
                         ui.separator();
-                        let color = if is_err { Color32::from_rgb(239, 68, 68) } else { Color32::from_rgb(34, 197, 94) };
+                        let color = if is_err {
+                            Color32::from_rgb(239, 68, 68)
+                        } else {
+                            Color32::from_rgb(34, 197, 94)
+                        };
                         ui.colored_label(color, msg);
                     }
                 }
@@ -298,7 +323,10 @@ impl eframe::App for MediaToMp3App {
                     ui.add_space(6.0);
                     let folder_btn = ui.small_button(format!("📁 {}", self.output_dir.display()));
                     if folder_btn.clicked() {
-                        if let Some(folder) = rfd::FileDialog::new().set_directory(&self.output_dir).pick_folder() {
+                        if let Some(folder) = rfd::FileDialog::new()
+                            .set_directory(&self.output_dir)
+                            .pick_folder()
+                        {
                             self.output_dir = folder;
                             self.save_current_settings();
                         }
@@ -309,11 +337,9 @@ impl eframe::App for MediaToMp3App {
         });
 
         // Central Panel
-        egui::CentralPanel::default().show(ctx, |ui| {
-            match self.tab {
-                ActiveTab::Download => self.render_download_tab(ui),
-                ActiveTab::Editor => self.render_editor_tab(ui),
-            }
+        egui::CentralPanel::default().show(ctx, |ui| match self.tab {
+            ActiveTab::Download => self.render_download_tab(ui),
+            ActiveTab::Editor => self.render_editor_tab(ui),
         });
     }
 }
@@ -331,7 +357,10 @@ impl MediaToMp3App {
                 ui.horizontal(|ui| {
                     ui.label(t("url_label", &[]));
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                        if ui.checkbox(&mut self.auto_clipboard, t("switch_clipboard", &[])).changed() {
+                        if ui
+                            .checkbox(&mut self.auto_clipboard, t("switch_clipboard", &[]))
+                            .changed()
+                        {
                             if self.auto_clipboard {
                                 self.start_clipboard_monitor();
                             } else {
@@ -367,7 +396,9 @@ impl MediaToMp3App {
                             .fill(Color32::from_rgb(99, 102, 241)),
                     );
 
-                    if add_btn.clicked() || (text_edit.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter))) {
+                    if add_btn.clicked()
+                        || (text_edit.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter)))
+                    {
                         let trimmed = self.url_input.trim().to_string();
                         if !trimmed.is_empty() {
                             let mut item = QueueItem::new(trimmed);
@@ -379,7 +410,10 @@ impl MediaToMp3App {
 
                             let already_queued = {
                                 let mut items = self.queue.items.lock().unwrap();
-                                if !items.iter().any(|i| i.url == item.url && !is_finished_status(&i.status)) {
+                                if !items
+                                    .iter()
+                                    .any(|i| i.url == item.url && !is_finished_status(&i.status))
+                                {
                                     items.push(item);
                                     false
                                 } else {
@@ -413,7 +447,10 @@ impl MediaToMp3App {
                             "wav" => "WAV",
                             _ => fmt,
                         };
-                        if ui.selectable_label(self.selected_format == fmt, label).clicked() {
+                        if ui
+                            .selectable_label(self.selected_format == fmt, label)
+                            .clicked()
+                        {
                             self.selected_format = fmt.to_string();
                             self.save_current_settings();
                         }
@@ -424,7 +461,10 @@ impl MediaToMp3App {
                         ui.label(t("quality_label", &[]));
                         for &br in &["320", "192", "128"] {
                             let label = format!("{} kbps", br);
-                            if ui.selectable_label(self.selected_bitrate == br, label).clicked() {
+                            if ui
+                                .selectable_label(self.selected_bitrate == br, label)
+                                .clicked()
+                            {
                                 self.selected_bitrate = br.to_string();
                                 self.save_current_settings();
                             }
@@ -436,11 +476,17 @@ impl MediaToMp3App {
 
                 // Checkboxes
                 ui.horizontal(|ui| {
-                    if ui.checkbox(&mut self.embed_thumbnail, t("chk_thumbnail", &[])).changed() {
+                    if ui
+                        .checkbox(&mut self.embed_thumbnail, t("chk_thumbnail", &[]))
+                        .changed()
+                    {
                         self.save_current_settings();
                     }
                     ui.add_space(12.0);
-                    if ui.checkbox(&mut self.parse_metadata, t("chk_parse", &[])).changed() {
+                    if ui
+                        .checkbox(&mut self.parse_metadata, t("chk_parse", &[]))
+                        .changed()
+                    {
                         self.save_current_settings();
                     }
                 });
@@ -507,7 +553,10 @@ impl MediaToMp3App {
             .inner_margin(12.0)
             .show(ui, |ui| {
                 ui.horizontal(|ui| {
-                    if ui.button(format!("📂 {}", t("ed_add_files", &[]))).clicked() {
+                    if ui
+                        .button(format!("📂 {}", t("ed_add_files", &[])))
+                        .clicked()
+                    {
                         if let Some(file) = rfd::FileDialog::new()
                             .add_filter("Audio Files", &["mp3", "m4a", "wav", "flac", "ogg", "aac"])
                             .pick_file()
@@ -517,9 +566,15 @@ impl MediaToMp3App {
                     }
 
                     if let Some(ref p) = self.editor_file {
-                        ui.colored_label(Color32::from_rgb(241, 245, 249), p.file_name().unwrap_or_default().to_string_lossy());
+                        ui.colored_label(
+                            Color32::from_rgb(241, 245, 249),
+                            p.file_name().unwrap_or_default().to_string_lossy(),
+                        );
                         if let Some(ref info) = self.audio_info {
-                            ui.colored_label(Color32::from_rgb(148, 163, 184), format!("⏱ {}", audio::format_time(info.duration, true)));
+                            ui.colored_label(
+                                Color32::from_rgb(148, 163, 184),
+                                format!("⏱ {}", audio::format_time(info.duration, true)),
+                            );
                         }
                     } else {
                         ui.colored_label(Color32::from_rgb(100, 116, 139), t("ed_empty", &[]));
@@ -551,7 +606,10 @@ impl MediaToMp3App {
                 });
                 ui.add_space(4.0);
 
-                let (response, painter) = ui.allocate_painter(Vec2::new(ui.available_width(), 90.0), Sense::click_and_drag());
+                let (response, painter) = ui.allocate_painter(
+                    Vec2::new(ui.available_width(), 90.0),
+                    Sense::click_and_drag(),
+                );
                 let rect = response.rect;
 
                 // Canvas background
@@ -574,7 +632,10 @@ impl MediaToMp3App {
                         } else {
                             Color32::from_rgb(51, 65, 85) // Slate
                         };
-                        painter.line_segment([Pos2::new(x, y_top), Pos2::new(x, y_bot)], Stroke::new(w_step.max(1.0), color));
+                        painter.line_segment(
+                            [Pos2::new(x, y_top), Pos2::new(x, y_bot)],
+                            Stroke::new(w_step.max(1.0), color),
+                        );
                     }
                 }
 
@@ -585,7 +646,8 @@ impl MediaToMp3App {
                         let click_time = ratio * total_dur;
 
                         // Check which marker is closer
-                        if (click_time - self.clip_start).abs() < (click_time - self.clip_end).abs() {
+                        if (click_time - self.clip_start).abs() < (click_time - self.clip_end).abs()
+                        {
                             self.clip_start = click_time.min(self.clip_end - 0.1).max(0.0);
                             self.start_str = audio::format_time(self.clip_start, true);
                         } else {
@@ -596,11 +658,25 @@ impl MediaToMp3App {
                 }
 
                 // Draw Start Marker (Green) & End Marker (Red)
-                let start_x = rect.left() + (self.clip_start / total_dur.max(0.001)) as f32 * rect.width();
-                let end_x = rect.left() + (self.clip_end / total_dur.max(0.001)) as f32 * rect.width();
+                let start_x =
+                    rect.left() + (self.clip_start / total_dur.max(0.001)) as f32 * rect.width();
+                let end_x =
+                    rect.left() + (self.clip_end / total_dur.max(0.001)) as f32 * rect.width();
 
-                painter.line_segment([Pos2::new(start_x, rect.top()), Pos2::new(start_x, rect.bottom())], Stroke::new(2.0_f32, Color32::from_rgb(34, 197, 94)));
-                painter.line_segment([Pos2::new(end_x, rect.top()), Pos2::new(end_x, rect.bottom())], Stroke::new(2.0_f32, Color32::from_rgb(239, 68, 68)));
+                painter.line_segment(
+                    [
+                        Pos2::new(start_x, rect.top()),
+                        Pos2::new(start_x, rect.bottom()),
+                    ],
+                    Stroke::new(2.0_f32, Color32::from_rgb(34, 197, 94)),
+                );
+                painter.line_segment(
+                    [
+                        Pos2::new(end_x, rect.top()),
+                        Pos2::new(end_x, rect.bottom()),
+                    ],
+                    Stroke::new(2.0_f32, Color32::from_rgb(239, 68, 68)),
+                );
             });
 
         ui.add_space(10.0);
@@ -613,7 +689,10 @@ impl MediaToMp3App {
             .show(ui, |ui| {
                 ui.horizontal(|ui| {
                     ui.label(t("ed_start", &[]));
-                    if ui.add(egui::TextEdit::singleline(&mut self.start_str).desired_width(70.0)).changed() {
+                    if ui
+                        .add(egui::TextEdit::singleline(&mut self.start_str).desired_width(70.0))
+                        .changed()
+                    {
                         if let Ok(val) = audio::parse_time(&self.start_str) {
                             self.clip_start = val.clamp(0.0, self.clip_end - 0.1);
                         }
@@ -621,7 +700,10 @@ impl MediaToMp3App {
 
                     ui.add_space(12.0);
                     ui.label(t("ed_end", &[]));
-                    if ui.add(egui::TextEdit::singleline(&mut self.end_str).desired_width(70.0)).changed() {
+                    if ui
+                        .add(egui::TextEdit::singleline(&mut self.end_str).desired_width(70.0))
+                        .changed()
+                    {
                         if let Ok(val) = audio::parse_time(&self.end_str) {
                             self.clip_end = val.clamp(self.clip_start + 0.1, total_dur);
                         }
@@ -629,7 +711,10 @@ impl MediaToMp3App {
 
                     ui.add_space(12.0);
                     let len = (self.clip_end - self.clip_start).max(0.0);
-                    ui.colored_label(Color32::from_rgb(148, 163, 184), format!("Len: {}", audio::format_time(len, true)));
+                    ui.colored_label(
+                        Color32::from_rgb(148, 163, 184),
+                        format!("Len: {}", audio::format_time(len, true)),
+                    );
 
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                         if ui.button(t("ed_select_all", &[])).clicked() {
@@ -649,15 +734,27 @@ impl MediaToMp3App {
                 ui.label(t("ed_effects_title", &[]));
                 ui.horizontal(|ui| {
                     ui.label("Fade In (s):");
-                    ui.add(egui::DragValue::new(&mut self.fade_in).speed(0.1).range(0.0..=10.0));
+                    ui.add(
+                        egui::DragValue::new(&mut self.fade_in)
+                            .speed(0.1)
+                            .range(0.0..=10.0),
+                    );
 
                     ui.add_space(12.0);
                     ui.label("Fade Out (s):");
-                    ui.add(egui::DragValue::new(&mut self.fade_out).speed(0.1).range(0.0..=10.0));
+                    ui.add(
+                        egui::DragValue::new(&mut self.fade_out)
+                            .speed(0.1)
+                            .range(0.0..=10.0),
+                    );
 
                     ui.add_space(12.0);
                     ui.label("Gain (dB):");
-                    ui.add(egui::DragValue::new(&mut self.gain_db).speed(0.5).range(-20.0..=20.0));
+                    ui.add(
+                        egui::DragValue::new(&mut self.gain_db)
+                            .speed(0.5)
+                            .range(-20.0..=20.0),
+                    );
 
                     ui.add_space(12.0);
                     ui.checkbox(&mut self.normalize, t("ed_normalize", &[]));
@@ -689,7 +786,10 @@ impl MediaToMp3App {
                 ui.horizontal(|ui| {
                     ui.label(t("format_label", &[]));
                     for &fmt in &["mp3", "m4a", "flac", "wav"] {
-                        if ui.selectable_label(self.export_fmt == fmt, fmt.to_uppercase()).clicked() {
+                        if ui
+                            .selectable_label(self.export_fmt == fmt, fmt.to_uppercase())
+                            .clicked()
+                        {
                             self.export_fmt = fmt.to_string();
                         }
                     }
@@ -698,7 +798,10 @@ impl MediaToMp3App {
                         ui.add_space(12.0);
                         ui.label(t("quality_label", &[]));
                         for &br in &["320", "192", "128"] {
-                            if ui.selectable_label(self.export_bitrate == br, format!("{}k", br)).clicked() {
+                            if ui
+                                .selectable_label(self.export_bitrate == br, format!("{}k", br))
+                                .clicked()
+                            {
                                 self.export_bitrate = br.to_string();
                             }
                         }
@@ -729,7 +832,11 @@ impl MediaToMp3App {
             None => return,
         };
 
-        let default_name = format!("{}_edited.{}", self.export_title.replace(' ', "_"), self.export_fmt);
+        let default_name = format!(
+            "{}_edited.{}",
+            self.export_title.replace(' ', "_"),
+            self.export_fmt
+        );
         let save_dialog = rfd::FileDialog::new()
             .set_file_name(&default_name)
             .add_filter(&self.export_fmt, &[&self.export_fmt])
@@ -740,7 +847,11 @@ impl MediaToMp3App {
             None => return,
         };
 
-        let clip = ClipSpec::new(src_file.to_string_lossy().to_string(), self.clip_start, self.clip_end);
+        let clip = ClipSpec::new(
+            src_file.to_string_lossy().to_string(),
+            self.clip_start,
+            self.clip_end,
+        );
         let clips = vec![clip];
 
         let cmd = match audio::build_export_command(
@@ -784,13 +895,14 @@ fn render_queue_card(ui: &mut egui::Ui, item: &QueueItem, app: &mut MediaToMp3Ap
         .show(ui, |ui| {
             ui.horizontal(|ui| {
                 // Platform Badge
-                let (badge_txt, badge_col) = if item.url.contains("youtube.com") || item.url.contains("youtu.be") {
-                    ("YouTube", Color32::from_rgb(239, 68, 68))
-                } else if item.url.contains("facebook.com") || item.url.contains("fb.watch") {
-                    ("Facebook", Color32::from_rgb(59, 130, 246))
-                } else {
-                    ("Media", Color32::from_rgb(148, 163, 184))
-                };
+                let (badge_txt, badge_col) =
+                    if item.url.contains("youtube.com") || item.url.contains("youtu.be") {
+                        ("YouTube", Color32::from_rgb(239, 68, 68))
+                    } else if item.url.contains("facebook.com") || item.url.contains("fb.watch") {
+                        ("Facebook", Color32::from_rgb(59, 130, 246))
+                    } else {
+                        ("Media", Color32::from_rgb(148, 163, 184))
+                    };
 
                 ui.colored_label(badge_col, format!("[{}]", badge_txt));
 
@@ -811,7 +923,10 @@ fn render_queue_card(ui: &mut egui::Ui, item: &QueueItem, app: &mut MediaToMp3Ap
                         if ui.button(format!("▶ {}", t("btn_play", &[]))).clicked() {
                             play_audio_file(&item.file_path);
                         }
-                        if ui.button(format!("📂 {}", t("btn_open_folder", &[]))).clicked() {
+                        if ui
+                            .button(format!("📂 {}", t("btn_open_folder", &[])))
+                            .clicked()
+                        {
                             open_path_in_explorer(&item.file_path);
                         }
                     } else if item.status == ERROR || item.status == CANCELLED {
@@ -821,10 +936,12 @@ fn render_queue_card(ui: &mut egui::Ui, item: &QueueItem, app: &mut MediaToMp3Ap
                         if ui.button(format!("✖ {}", t("btn_remove", &[]))).clicked() {
                             app.queue.remove(item.id);
                         }
-                    } else if is_active_status(&item.status) {
-                        if ui.button(format!("⏹ {}", t("btn_cancel_current", &[]))).clicked() {
-                            app.queue.cancel_current();
-                        }
+                    } else if is_active_status(&item.status)
+                        && ui
+                            .button(format!("⏹ {}", t("btn_cancel_current", &[])))
+                            .clicked()
+                    {
+                        app.queue.cancel_current();
                     }
                 });
             });
@@ -834,14 +951,31 @@ fn render_queue_card(ui: &mut egui::Ui, item: &QueueItem, app: &mut MediaToMp3Ap
             if is_active_status(&item.status) {
                 ui.horizontal(|ui| {
                     let progress = (item.percent / 100.0).clamp(0.0, 1.0) as f32;
-                    ui.add(egui::ProgressBar::new(progress).desired_width(ui.available_width() - 150.0).animate(true));
+                    ui.add(
+                        egui::ProgressBar::new(progress)
+                            .desired_width(ui.available_width() - 150.0)
+                            .animate(true),
+                    );
                     let speed_mb = item.speed as f64 / (1024.0 * 1024.0);
-                    ui.colored_label(Color32::from_rgb(148, 163, 184), format!("{:.1}% · {:.1}MB/s", item.percent, speed_mb));
+                    ui.colored_label(
+                        Color32::from_rgb(148, 163, 184),
+                        format!("{:.1}% · {:.1}MB/s", item.percent, speed_mb),
+                    );
                 });
             } else if item.status == DONE {
-                ui.colored_label(Color32::from_rgb(34, 197, 94), format!("{} · {}", t("st_done", &[]), item.file_path));
+                ui.colored_label(
+                    Color32::from_rgb(34, 197, 94),
+                    format!("{} · {}", t("st_done", &[]), item.file_path),
+                );
             } else if item.status == ERROR {
-                ui.colored_label(Color32::from_rgb(239, 68, 68), format!("{} · {}", t("st_error", &[("error", &item.error)]), item.error));
+                ui.colored_label(
+                    Color32::from_rgb(239, 68, 68),
+                    format!(
+                        "{} · {}",
+                        t("st_error", &[("error", &item.error)]),
+                        item.error
+                    ),
+                );
             } else if item.status == CANCELLED {
                 ui.colored_label(Color32::from_rgb(245, 158, 11), t("st_cancelled", &[]));
             } else {

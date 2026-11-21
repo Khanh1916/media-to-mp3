@@ -2,9 +2,14 @@
 name = "media-to-mp3"
 version = "1.0.0"
 edition = "2021"
+rust-version = "1.80"
 authors = ["KhanhNN <khanhnn@users.noreply.github.com>"]
 description = "High-performance Media to MP3 Downloader & Audio Editor in Rust (YouTube & Facebook)"
+readme = "README.md"
 license = "MIT"
+repository = "https://github.com/Khanh1916/media-to-mp3"
+keywords = ["youtube", "mp3", "audio-editor", "downloader", "egui"]
+categories = ["multimedia::audio", "command-line-utilities", "gui"]
 
 [lib]
 name = "media_to_mp3"
@@ -30,3 +35,10 @@ which = "7.0"
 
 [dev-dependencies]
 tempfile = "3.10"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+panic = "abort"
+strip = true

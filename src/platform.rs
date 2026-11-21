@@ -10,9 +10,7 @@ pub fn open_path_in_explorer<P: AsRef<Path>>(path: P) {
                 .arg(format!("/select,{}", p.display()))
                 .spawn();
         } else {
-            let _ = Command::new("explorer")
-                .arg(p)
-                .spawn();
+            let _ = Command::new("explorer").arg(p).spawn();
         }
     }
     #[cfg(target_os = "macos")]
