@@ -169,7 +169,19 @@ pub fn get_ffmpeg_path() -> Option<PathBuf> {
         return Some(path);
     }
 
-    // 2. Local check
+    // 2. Next to executable
+    if let Ok(exe) = std::env::current_exe() {
+        if let Some(dir) = exe.parent() {
+            for candidate in &["ffmpeg.exe", "ffmpeg", "bin/ffmpeg.exe", "bin/ffmpeg"] {
+                let p = dir.join(candidate);
+                if p.is_file() {
+                    return Some(p);
+                }
+            }
+        }
+    }
+
+    // 3. Local working dir check
     for candidate in &["ffmpeg.exe", "ffmpeg", "bin/ffmpeg.exe", "bin/ffmpeg"] {
         let p = PathBuf::from(candidate);
         if p.is_file() {
@@ -177,18 +189,71 @@ pub fn get_ffmpeg_path() -> Option<PathBuf> {
         }
     }
 
-    // 3. Common Python imageio_ffmpeg or system paths
+    // 4. Common Python installation scripts directories
     #[cfg(target_os = "windows")]
     {
         if let Ok(local_appdata) = std::env::var("LOCALAPPDATA") {
-            let py_scripts = PathBuf::from(&local_appdata)
+            let py_dir = PathBuf::from(&local_appdata)
                 .join("Programs")
-                .join("Python")
-                .join("Python313")
-                .join("Scripts")
-                .join("ffmpeg.exe");
-            if py_scripts.is_file() {
-                return Some(py_scripts);
+                .join("Python");
+            if py_dir.is_dir() {
+                if let Ok(entries) = std::fs::read_dir(py_dir) {
+                    for entry in entries.flatten() {
+                        let candidate = entry.path().join("Scripts").join("ffmpeg.exe");
+                        if candidate.is_file() {
+                            return Some(candidate);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    None
+}
+
+pub fn get_ytdlp_path() -> Option<PathBuf> {
+    // 1. System PATH
+    if let Ok(path) = which::which("yt-dlp") {
+        return Some(path);
+    }
+
+    // 2. Next to executable
+    if let Ok(exe) = std::env::current_exe() {
+        if let Some(dir) = exe.parent() {
+            for candidate in &["yt-dlp.exe", "yt-dlp", "bin/yt-dlp.exe", "bin/yt-dlp"] {
+                let p = dir.join(candidate);
+                if p.is_file() {
+                    return Some(p);
+                }
+            }
+        }
+    }
+
+    // 3. Local working dir check
+    for candidate in &["yt-dlp.exe", "yt-dlp", "bin/yt-dlp.exe", "bin/yt-dlp"] {
+        let p = PathBuf::from(candidate);
+        if p.is_file() {
+            return Some(p);
+        }
+    }
+
+    // 4. Common Python scripts directories
+    #[cfg(target_os = "windows")]
+    {
+        if let Ok(local_appdata) = std::env::var("LOCALAPPDATA") {
+            let py_dir = PathBuf::from(&local_appdata)
+                .join("Programs")
+                .join("Python");
+            if py_dir.is_dir() {
+                if let Ok(entries) = std::fs::read_dir(py_dir) {
+                    for entry in entries.flatten() {
+                        let candidate = entry.path().join("Scripts").join("yt-dlp.exe");
+                        if candidate.is_file() {
+                            return Some(candidate);
+                        }
+                    }
+                }
             }
         }
     }
@@ -253,8 +318,8 @@ impl MediaDownloader {
         let out_template = target_dir.join("%(title)s.%(ext)s");
 
         // Prefer yt-dlp executable, fallback to python -m yt_dlp
-        let (prog, mut args) = if which::which("yt-dlp").is_ok() {
-            ("yt-dlp".to_string(), Vec::new())
+        let (prog, mut args) = if let Some(ytdlp) = get_ytdlp_path() {
+            (ytdlp.to_string_lossy().to_string(), Vec::new())
         } else {
             (
                 "python".to_string(),
@@ -321,9 +386,22 @@ impl MediaDownloader {
                 if let Ok(pct) = caps[1].parse::<f64>() {
                     progress_callback("downloading", pct, 1024 * 512, 5);
                 }
-            } else if line.contains("[download] Destination:") {
-                if let Some(dest) = line.split("Destination:").nth(1) {
-                    final_path = dest.trim().to_string();
+            }
+
+            // Capture final destination file path
+            if let Some(dest) = line.split("Destination:").nth(1) {
+                let p = dest.trim().to_string();
+                if !p.is_empty() {
+                    final_path = p;
+                }
+            } else if line.contains("has already been downloaded") {
+                if let Some(rest) = line.strip_prefix("[download]") {
+                    if let Some(idx) = rest.find("has already been downloaded") {
+                        let p = rest[..idx].trim().to_string();
+                        if !p.is_empty() {
+                            final_path = p;
+                        }
+                    }
                 }
             }
         }
@@ -331,7 +409,18 @@ impl MediaDownloader {
         let status = child.wait();
         match status {
             Ok(s) if s.success() => {
-                finished_callback(final_path);
+                let final_buf = PathBuf::from(&final_path);
+                let resolved = if final_buf.is_file() {
+                    final_path
+                } else {
+                    let candidate = final_buf.with_extension(fmt);
+                    if candidate.is_file() {
+                        candidate.to_string_lossy().to_string()
+                    } else {
+                        final_path
+                    }
+                };
+                finished_callback(resolved);
             }
             Ok(s) => {
                 error_callback(format!("yt-dlp exited with code {:?}", s.code()));

@@ -7,11 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [1.0.0] - 2026-11-21
+## [2.0.0] - 2026-11-22
 
 ### Changed (Complete Architecture Rewrite)
 - **100% Pure Rust Rewrite**: Completely replaced the legacy Python engine, Tkinter GUI, and PyInstaller build pipeline with a native Rust application.
-- **Binary Footprint**: Reduced packaged application size from ~45 MB to ~7.6 MB.
+- **Binary Footprint**: Reduced packaged application size from ~45 MB to ~5.8 MB.
 - **Instant Launch**: Eliminated Python interpreter and virtualenv startup latency (< 0.2s launch).
 - **Modern Native GUI**: Re-engineered desktop GUI in `eframe` / `egui 0.29` with Obsidian/Slate dark palette (`#0f1117`, `#181c26`), Indigo accents (`#6366f1`), and an interactive draggable waveform canvas.
 - **Native OS Dialogs**: Replaced custom file dialogs with native system pickers via `rfd`.
@@ -25,5 +25,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.9.0] - Legacy Python Version
-- Initial Python/CustomTkinter implementation with yt-dlp and PyInstaller packaging.
+## [1.0.0] - 2026-11-02
+- Legacy standalone single-file release in Python/CustomTkinter with yt-dlp and embedded FFmpeg.

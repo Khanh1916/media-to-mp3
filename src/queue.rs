@@ -95,21 +95,34 @@ impl DownloadQueue {
             return None;
         }
 
+        let item = QueueItem::new(trimmed);
+        if self.add_item(item.clone()) {
+            Some(item)
+        } else {
+            None
+        }
+    }
+
+    pub fn add_item(&self, item: QueueItem) -> bool {
+        let trimmed = item.url.trim();
+        if trimmed.is_empty() {
+            return false;
+        }
+
         let mut items = self.items.lock().unwrap();
         if items
             .iter()
             .any(|i| i.url == trimmed && !is_finished_status(&i.status))
         {
-            return None;
+            return false;
         }
 
-        let item = QueueItem::new(trimmed);
         items.push(item.clone());
         drop(items);
 
         self.notify(Some(&item));
         self.kick();
-        Some(item)
+        true
     }
 
     pub fn remove(&self, item_id: usize) {
@@ -184,7 +197,7 @@ impl DownloadQueue {
         }
     }
 
-    fn kick(&self) {
+    pub fn kick(&self) {
         let mut handle = self.worker_handle.lock().unwrap();
         if handle.is_some() {
             return;

@@ -1,5 +1,17 @@
 @echo off
 setlocal
+
+rem 1. Pre-built binary in same directory (release archive)
+if exist "%~dp0media-to-mp3.exe" (
+    "%~dp0media-to-mp3.exe" %*
+    exit /b %ERRORLEVEL%
+)
+if exist "%~dp0MediaToMP3.exe" (
+    "%~dp0MediaToMP3.exe" %*
+    exit /b %ERRORLEVEL%
+)
+
+rem 2. Development mode: locate Cargo and build from source
 if defined CARGO_HOME (
     set "PATH=%CARGO_HOME%\bin;%PATH%"
 ) else if exist "E:\tools\rust\cargo\bin" (

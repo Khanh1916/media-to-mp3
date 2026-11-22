@@ -4,15 +4,13 @@ use crate::config::{load_settings, save_settings, Settings};
 use crate::downloader::{get_ffmpeg_path, MediaDownloader};
 use crate::i18n::{self, t};
 use crate::platform::{open_path_in_explorer, play_audio_file};
-use crate::queue::{
-    is_active_status, is_finished_status, DownloadQueue, QueueItem, CANCELLED, DONE, ERROR,
-};
+use crate::queue::{is_active_status, DownloadQueue, QueueItem, CANCELLED, DONE, ERROR};
 use crate::version::VERSION;
 use arboard::Clipboard;
 use eframe::egui::{self, Color32, Pos2, Rounding, Sense, Stroke, Vec2};
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
 #[derive(PartialEq, Clone, Copy)]
@@ -61,7 +59,7 @@ pub struct MediaToMp3App {
     export_title: String,
     export_artist: String,
     keep_cover: bool,
-    export_progress: Option<f64>,
+    export_progress: Arc<Mutex<Option<f64>>>,
     cancel_export_flag: Arc<AtomicBool>,
 }
 
@@ -115,7 +113,7 @@ impl MediaToMp3App {
             export_title: String::new(),
             export_artist: String::new(),
             keep_cover: true,
-            export_progress: None,
+            export_progress: Arc::new(Mutex::new(None)),
             cancel_export_flag: Arc::new(AtomicBool::new(false)),
         };
 
@@ -132,9 +130,21 @@ impl MediaToMp3App {
 
     fn start_clipboard_monitor(&mut self) {
         let q = self.queue.clone();
+        let fmt = self.selected_format.clone();
+        let bitrate = self.selected_bitrate.clone();
+        let embed_thumbnail = self.embed_thumbnail;
+        let parse_metadata = self.parse_metadata;
+        let out_dir = self.output_dir.to_string_lossy().to_string();
+
         self.clipboard_monitor = Some(ClipboardMonitor::new(
             move |url, _platform| {
-                let _ = q.add(&url);
+                let mut item = QueueItem::new(url);
+                item.fmt = fmt.clone();
+                item.bitrate = bitrate.clone();
+                item.embed_thumbnail = embed_thumbnail;
+                item.parse_metadata = parse_metadata;
+                item.output_dir = out_dir.clone();
+                let _ = q.add_item(item);
             },
             Duration::from_millis(800),
         ));
@@ -256,7 +266,12 @@ fn setup_custom_theme(ctx: &egui::Context) {
 impl eframe::App for MediaToMp3App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         // Request repaint if active downloads are running
-        if self.queue.is_busy() || self.export_progress.is_some() {
+        let is_exporting = self
+            .export_progress
+            .lock()
+            .map(|p| p.is_some())
+            .unwrap_or(false);
+        if self.queue.is_busy() || is_exporting {
             ctx.request_repaint_after(Duration::from_millis(150));
         }
 
@@ -441,21 +456,7 @@ impl MediaToMp3App {
                             item.parse_metadata = self.parse_metadata;
                             item.output_dir = self.output_dir.to_string_lossy().to_string();
 
-                            let already_queued = {
-                                let mut items = self.queue.items.lock().unwrap();
-                                if !items
-                                    .iter()
-                                    .any(|i| i.url == item.url && !is_finished_status(&i.status))
-                                {
-                                    items.push(item);
-                                    false
-                                } else {
-                                    true
-                                }
-                            };
-
-                            if !already_queued {
-                                self.queue.add(""); // Kick worker
+                            if self.queue.add_item(item) {
                                 self.url_input.clear();
                                 self.show_toast(t("msg_added", &[("n", "1")]), false);
                             } else {
@@ -852,7 +853,8 @@ impl MediaToMp3App {
                     });
                 });
 
-                if let Some(pct) = self.export_progress {
+                let progress_val = self.export_progress.lock().ok().and_then(|p| *p);
+                if let Some(pct) = progress_val {
                     ui.add_space(8.0);
                     ui.add(egui::ProgressBar::new(pct as f32).show_percentage());
                 }
@@ -909,12 +911,26 @@ impl MediaToMp3App {
         };
 
         let total_time = audio::output_duration(&clips, self.crossfade);
-        self.export_progress = Some(0.0);
+        if let Ok(mut lock) = self.export_progress.lock() {
+            *lock = Some(0.0);
+        }
         self.cancel_export_flag.store(false, Ordering::SeqCst);
 
         let cancel_flag = self.cancel_export_flag.clone();
+        let progress_arc = self.export_progress.clone();
         std::thread::spawn(move || {
-            let _ = audio::run_export(&cmd, total_time, None::<fn(f64)>, Some(cancel_flag));
+            let progress_cb = {
+                let p = progress_arc.clone();
+                move |pct: f64| {
+                    if let Ok(mut lock) = p.lock() {
+                        *lock = Some(pct);
+                    }
+                }
+            };
+            let _ = audio::run_export(&cmd, total_time, Some(progress_cb), Some(cancel_flag));
+            if let Ok(mut lock) = progress_arc.lock() {
+                *lock = None;
+            }
         });
         self.show_toast(format!("Exporting to: {}", target_path.display()), false);
     }

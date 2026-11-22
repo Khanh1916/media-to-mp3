@@ -1,6 +1,6 @@
 [package]
 name = "media-to-mp3"
-version = "1.0.0"
+version = "2.0.0"
 edition = "2021"
 rust-version = "1.80"
 authors = ["KhanhNN <khanhnn@users.noreply.github.com>"]
